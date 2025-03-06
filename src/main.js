@@ -11,19 +11,20 @@ canvasResizeObserver.observe(canvas);
 function resampleCanvas() {
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
-    draw();
+	draw();
 }
 
 function draw() {
-    context.moveTo(0, 0);
-    context.beginPath();
-    context.arc(
-        canvas.width / 2,
-        canvas.height / 2,
-        30,
-        0,
-        2 * Math.PI
-    );
-    context.fill();
-    context.stroke();
+	context.moveTo(0, 0);
+	context.beginPath();
+	context.arc(canvas.width / 2, canvas.height / 2, 30, 0, 2 * Math.PI);
+	context.fill();
+	context.stroke();
 }
+
+const tache1 = new Image();
+tache1.src = '/image/stain.png';
+tache1.addEventListener('load', event => {
+	context.drawImage(tache1, 200, 200, 40, 40);
+	console.log('loaded');
+});
