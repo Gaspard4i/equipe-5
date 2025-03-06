@@ -44,11 +44,15 @@ function movePlayer() {
 	x += vx;
 	y += vy;
 
-	if (x + radius > canvas.width || x < 0) {
-		vx = 0;
+	if (x - radius < 0) {
+		x = radius;
+	} else if (x + radius > canvas.width) {
+		x = canvas.width - radius;
 	}
-	if (y + radius > canvas.height || y < 0) {
-		vy = 0;
+	if (y - radius < 0) {
+		y = radius;
+	} else if (y + radius > canvas.height) {
+		y = canvas.height - radius;
 	}
 }
 
