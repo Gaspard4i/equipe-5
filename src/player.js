@@ -17,6 +17,31 @@ export class Player extends Entity {
 		context.fill();
 		context.stroke();
 	}
+	slow() {
+		vx *= 0.5;
+		vy *= 0.5;
+	}
+
+	grow() {
+		radius += 5;
+		slow();
+	}
+
+	checkStainCollisionFromCenter() {
+		for (let i = 0; i < position.length; i++) {
+			let stainCenterX = position[i][0] + IMAGE_SIZE / 2;
+			let stainCenterY = position[i][1] + IMAGE_SIZE / 2;
+
+			let dx = stainCenterX - x;
+			let dy = stainCenterY - y;
+			let distance = Math.sqrt(dx * dx + dy * dy);
+			if (distance <= radius) {
+				position.splice(i, 1);
+				i--;
+				grow();
+			}
+		}
+	}
 }
 
 let player = new Player(30, canvas.width / 2, canvas.height / 2, 0, 0);
@@ -35,6 +60,7 @@ export function movePlayer() {
 	} else if (player.y + player.radius > canvas.height) {
 		player.y = canvas.height - player.radius;
 	}
+	checkStainCollisionFromCenter();
 }
 
 export function handleKeyDown(event) {
