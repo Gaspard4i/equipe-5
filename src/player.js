@@ -14,6 +14,7 @@ export class Player extends Entity {
 		this.vx = vx;
 		this.vy = vy;
 		this.speed = PLAYER_SPEED;
+		this.score = 0;
 		this.keys = {};
 		this.playerCanvas = document.createElement('canvas'); // Créer un canvas pour le joueur
 		this.playerCanvas.width = radius * 2;
@@ -60,6 +61,9 @@ export class Player extends Entity {
 		this.playerCanvas.width = this.radius * 2;
 		this.playerCanvas.height = this.radius * 2;
 		this.drawPlayerCanvas();
+		this.score += 15;
+		console.log('Score = ' + this.score);
+		document.querySelector('.score h2').innerHTML = this.score;
 		this.slow();
 	}
 
