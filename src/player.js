@@ -2,12 +2,16 @@ import { canvas } from './canvas.js';
 import { Entity } from './entity.js';
 import { stains } from './entities.js';
 
-let color = 'rgba(255, 255, 255)';
+const COLOR = 'rgba(255, 255, 255)';
+const PLAYER_SPEED = 15;
+const STAIN_SIZE = 40;
 
 export class Player extends Entity {
 	constructor(radius, x, y, vx, vy) {
-		super(radius, x, y, vx, vy);
-		this.color = color;
+		super(radius, x, y);
+		this.color = COLOR;
+		this.vx = vx;
+		this.vy = vy;
 	}
 
 	draw(context) {
@@ -18,6 +22,7 @@ export class Player extends Entity {
 		context.fill();
 		context.stroke();
 	}
+
 	slow() {
 		this.vx *= 0.5;
 		this.vy *= 0.5;
@@ -30,22 +35,12 @@ export class Player extends Entity {
 
 	checkStainCollisionFromCenter() {
 		for (let i = 0; i < stains.length; i++) {
-			let stainCenterX = stains[i].x + 40 / 2;
-			let stainCenterY = stains[i].y + 40 / 2;
+			const stainCenterX = stains[i].x + STAIN_SIZE / 2;
+			const stainCenterY = stains[i].y + STAIN_SIZE / 2;
+			const dx = stainCenterX - this.x;
+			const dy = stainCenterY - this.y;
+			const distance = Math.sqrt(dx * dx + dy * dy);
 
-			let dx = stainCenterX - this.x;
-			let dy = stainCenterY - this.y;
-			let distance = Math.sqrt(dx * dx + dy * dy);
-			// console.log(
-			// 	`Collision detected with stain at (${stains[i].x}, ${stains[i].y})`
-			// );
-			// console.log(
-			// 	`Player position: (${this.x}, ${this.y}), Player radius: ${this.radius}`
-			// );
-			// console.log(
-			// 	`Stain position: (${stains[i].x}, ${stains[i].y}), Stain center: (${stainCenterX}, ${stainCenterY})`
-			// );
-			// console.log(`Distance: ${distance}`);
 			if (distance <= this.radius) {
 				stains.splice(i, 1);
 				i--;
@@ -55,7 +50,7 @@ export class Player extends Entity {
 	}
 }
 
-let player = new Player(30, canvas.width / 2, canvas.height / 2, 0, 0);
+const player = new Player(30, canvas.width / 2, canvas.height / 2, 0, 0);
 
 export function movePlayer() {
 	player.x += player.vx;
@@ -77,16 +72,16 @@ export function movePlayer() {
 export function handleKeyDown(event) {
 	switch (event.key) {
 		case 'ArrowRight':
-			player.vx = 15;
+			player.vx = PLAYER_SPEED;
 			break;
 		case 'ArrowLeft':
-			player.vx = -15;
+			player.vx = -PLAYER_SPEED;
 			break;
 		case 'ArrowUp':
-			player.vy = -15;
+			player.vy = -PLAYER_SPEED;
 			break;
 		case 'ArrowDown':
-			player.vy = 15;
+			player.vy = PLAYER_SPEED;
 			break;
 	}
 }
