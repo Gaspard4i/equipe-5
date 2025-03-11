@@ -14,6 +14,7 @@ export class Player extends Entity {
 		this.vx = vx;
 		this.vy = vy;
 		this.speed = PLAYER_SPEED;
+		this.score = 0;
 	}
 
 	draw(context) {
@@ -33,6 +34,9 @@ export class Player extends Entity {
 	grow() {
 		const maxRadius = Math.min(canvas.width, canvas.height) / 2;
 		this.radius = Math.min(this.radius + 10, maxRadius);
+		this.score += 15;
+		console.log('Score = ' + this.score);
+		document.querySelector('.score h2').innerHTML = this.score;
 		this.slow();
 	}
 
@@ -112,20 +116,19 @@ export function handleKeyUp(event) {
 }
 
 canvas.addEventListener('mousemove', event => {
-    const dx = event.offsetX - player.x;
-    const dy = event.offsetY - player.y;
+	const dx = event.offsetX - player.x;
+	const dy = event.offsetY - player.y;
 
-    const distance = Math.sqrt(dx * dx + dy * dy);
+	const distance = Math.sqrt(dx * dx + dy * dy);
 
-    if (distance > player.radius) {
-        player.vx = (dx / distance) * player.speed;
-        player.vy = (dy / distance) * player.speed;
-    } else {
-        player.vx = 0;
-        player.vy = 0;
-    }
+	if (distance > player.radius) {
+		player.vx = (dx / distance) * player.speed;
+		player.vy = (dy / distance) * player.speed;
+	} else {
+		player.vx = 0;
+		player.vy = 0;
+	}
 });
-
 
 export function drawPlayer(context) {
 	player.draw(context);
