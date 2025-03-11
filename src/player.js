@@ -4,6 +4,7 @@ import { stains } from './entities.js';
 import { camera } from './camera.js';
 
 const HITBOX_COLOR = 'rgba(255, 0, 0, 0.5)'; // Couleur de la bordure de la hitbox
+const PLAYER_COLOR = 'rgba(255, 255, 255)'; // Couleur blanche pour le joueur
 const STAIN_SIZE = 40;
 const PLAYER_SPEED = 5;
 const ACCELERATED_SPEED = 15;
@@ -17,22 +18,6 @@ export class Player extends Entity {
 		this.speed = PLAYER_SPEED;
 		this.score = 0;
 		this.keys = {};
-		this.playerCanvas = document.createElement('canvas'); // Créer un canvas pour le joueur
-		this.playerCanvas.width = radius * 2;
-		this.playerCanvas.height = radius * 2;
-		this.playerContext = this.playerCanvas.getContext('2d');
-		this.drawPlayerCanvas();
-	}
-
-	drawPlayerCanvas() {
-		// Dessiner le joueur sur le canvas
-		this.playerContext.fillStyle = 'yellow'; // Couleur jaune pour le joueur
-		this.playerContext.fillRect(
-			0,
-			0,
-			this.playerCanvas.width,
-			this.playerCanvas.height
-		);
 	}
 
 	draw(context) {
@@ -44,11 +29,10 @@ export class Player extends Entity {
 		context.stroke();
 
 		// Dessiner le joueur
-		context.drawImage(
-			this.playerCanvas,
-			this.x - this.radius,
-			this.y - this.radius
-		);
+		context.fillStyle = PLAYER_COLOR;
+		context.beginPath();
+		context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+		context.fill();
 	}
 
 	slow() {
@@ -59,9 +43,6 @@ export class Player extends Entity {
 	grow() {
 		const maxRadius = Math.min(canvas.width, canvas.height) / 2;
 		this.radius = Math.min(this.radius + 10, maxRadius);
-		this.playerCanvas.width = this.radius * 2;
-		this.playerCanvas.height = this.radius * 2;
-		this.drawPlayerCanvas();
 		this.score += 15;
 		console.log('Score = ' + this.score);
 		document.querySelector('.score h2').innerHTML = this.score;
