@@ -2,50 +2,39 @@ import { canvas } from './canvas.js';
 import { Entity } from './entity.js';
 import { stains } from './entities.js';
 
-const HITBOX_COLOR = 'rgba(255, 0, 0, 0.5)'; // Couleur de la bordure de la hitbox
-const PLAYER_COLOR = 'rgba(255, 255, 255)'; // Couleur blanche pour le joueur
+const PLAYER_COLOR = 'rgba(255, 255, 255)';
 const STAIN_SIZE = 40;
-const PLAYER_SPEED = 5;
+const BASE_PLAYER_SPEED = 5;
 const ACCELERATED_SPEED = 15;
 
 export class Player extends Entity {
 	constructor(radius, x, y, vx, vy) {
 		super(radius, x, y);
-		this.color = HITBOX_COLOR;
 		this.vx = vx;
 		this.vy = vy;
-		this.speed = PLAYER_SPEED;
+		this.speed = BASE_PLAYER_SPEED;
 		this.score = 0;
 		this.keys = {};
 	}
 
 	draw(context) {
-		// Dessiner la hitbox
-		context.strokeStyle = this.color;
-		context.lineWidth = 2;
-		context.beginPath();
-		context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-		context.stroke();
-
-		// Dessiner le joueur
 		context.fillStyle = PLAYER_COLOR;
 		context.beginPath();
 		context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
 		context.fill();
 	}
 
-	slow() {
-		this.speed = PLAYER_SPEED / Math.sqrt(this.radius / 30);
+	updateSpeed() {
+		this.speed = (BASE_PLAYER_SPEED / this.radius) * 30;
 		console.log(this.speed);
 	}
 
 	grow() {
-		const maxRadius = Math.min(canvas.width, canvas.height) / 2;
-		this.radius = Math.min(this.radius + 10, maxRadius);
-		this.score += 15;
+		this.score += 10;
+		this.radius = 30 + Math.sqrt(this.score * 1.1) * 1.5;
 		console.log('Score = ' + this.score);
 		document.querySelector('.score h2').innerHTML = this.score;
-		this.slow();
+		this.updateSpeed();
 	}
 
 	checkStainCollisionFromCenter() {
@@ -66,7 +55,7 @@ export class Player extends Entity {
 		}
 	}
 
-	updateSpeed() {
+	updateVelocity() {
 		this.vx = 0;
 		this.vy = 0;
 		const speed = this.keys['Shift'] ? ACCELERATED_SPEED : this.speed;
@@ -74,6 +63,10 @@ export class Player extends Entity {
 		if (this.keys['ArrowLeft']) this.vx -= speed;
 		if (this.keys['ArrowUp']) this.vy -= speed;
 		if (this.keys['ArrowDown']) this.vy += speed;
+
+		if (this.keys['Shift']) {
+			this.radius = Math.max(10, this.radius - 0.1);
+		}
 	}
 
 	updateMouseMovement(dx, dy) {
@@ -85,6 +78,10 @@ export class Player extends Entity {
 		} else {
 			this.vx = 0;
 			this.vy = 0;
+		}
+
+		if (this.keys['Shift']) {
+			this.radius = Math.max(10, this.radius - 0.1);
 		}
 	}
 }
@@ -117,7 +114,7 @@ export function handleKeyDown(event) {
 		player.keys['Shift'] = true;
 	} else {
 		player.keys[event.key] = true;
-		player.updateSpeed();
+		player.updateVelocity();
 	}
 }
 
@@ -126,7 +123,7 @@ export function handleKeyUp(event) {
 		player.keys['Shift'] = false;
 	} else {
 		player.keys[event.key] = false;
-		player.updateSpeed();
+		player.updateVelocity();
 	}
 }
 
