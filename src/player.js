@@ -111,6 +111,22 @@ export function handleKeyUp(event) {
 	}
 }
 
+canvas.addEventListener('mousemove', event => {
+    const dx = event.offsetX - player.x;
+    const dy = event.offsetY - player.y;
+
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > player.radius) {
+        player.vx = (dx / distance) * player.speed;
+        player.vy = (dy / distance) * player.speed;
+    } else {
+        player.vx = 0;
+        player.vy = 0;
+    }
+});
+
+
 export function drawPlayer(context) {
 	player.draw(context);
 }
