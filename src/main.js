@@ -5,21 +5,11 @@ import {
 	handleKeyUp,
 	drawPlayer,
 } from './player.js';
-import { Stain } from './stain.js';
-import { Malus } from './malus.js';
-import { Bonus } from './bonus.js';
-
-const entities = [
-	new Stain(20, 200, 200, 0, 0),
-	new Stain(20, 600, 600, 0, 0),
-	new Malus(20, 246, 478, 0, 0),
-	new Malus(20, 234, 646, 0, 0),
-	new Bonus(20, 987, 789, 0, 0),
-];
+import { stains } from './entities.js';
 
 function draw() {
 	drawPlayer(context);
-	entities.forEach(entity => entity.draw(context));
+	stains.forEach(entity => entity.draw(context));
 }
 
 function render() {
