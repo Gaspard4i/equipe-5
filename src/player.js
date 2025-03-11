@@ -1,41 +1,55 @@
 import { canvas } from './canvas.js';
+import { Entity } from './entity.js';
 
-let radius = 30;
-let x = canvas.width / 2;
-let y = canvas.height / 2;
-let vx = 0;
-let vy = 0;
-let color = 'rgba(204, 80, 97)';
+let color = 'rgba(255, 255, 255)';
+
+export class Player extends Entity {
+	constructor(radius, x, y, vx, vy) {
+		super(radius, x, y, vx, vy);
+		this.color = color;
+	}
+
+	draw(context) {
+		context.fillStyle = this.color;
+		context.strokeStyle = this.color;
+		context.beginPath();
+		context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+		context.fill();
+		context.stroke();
+	}
+}
+
+let player = new Player(30, canvas.width / 2, canvas.height / 2, 0, 0);
 
 export function movePlayer() {
-	x += vx;
-	y += vy;
+	player.x += player.vx;
+	player.y += player.vy;
 
-	if (x - radius < 0) {
-		x = radius;
-	} else if (x + radius > canvas.width) {
-		x = canvas.width - radius;
+	if (player.x - player.radius < 0) {
+		player.x = player.radius;
+	} else if (player.x + player.radius > canvas.width) {
+		player.x = canvas.width - player.radius;
 	}
-	if (y - radius < 0) {
-		y = radius;
-	} else if (y + radius > canvas.height) {
-		y = canvas.height - radius;
+	if (player.y - player.radius < 0) {
+		player.y = player.radius;
+	} else if (player.y + player.radius > canvas.height) {
+		player.y = canvas.height - player.radius;
 	}
 }
 
 export function handleKeyDown(event) {
 	switch (event.key) {
 		case 'ArrowRight':
-			vx = 15;
+			player.vx = 15;
 			break;
 		case 'ArrowLeft':
-			vx = -15;
+			player.vx = -15;
 			break;
 		case 'ArrowUp':
-			vy = -15;
+			player.vy = -15;
 			break;
 		case 'ArrowDown':
-			vy = 15;
+			player.vy = 15;
 			break;
 	}
 }
@@ -44,21 +58,15 @@ export function handleKeyUp(event) {
 	switch (event.key) {
 		case 'ArrowRight':
 		case 'ArrowLeft':
-			vx = 0;
+			player.vx = 0;
 			break;
 		case 'ArrowUp':
 		case 'ArrowDown':
-			vy = 0;
+			player.vy = 0;
 			break;
 	}
 }
 
 export function drawPlayer(context) {
-	context.moveTo(0, 0);
-	context.beginPath();
-	context.arc(x, y, radius, 0, 2 * Math.PI);
-	context.fillStyle = color;
-	context.fill();
-	context.strokeStyle = color;
-	context.stroke();
+	player.draw(context);
 }
