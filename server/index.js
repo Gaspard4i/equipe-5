@@ -16,4 +16,8 @@ httpServer.listen(port, () => {
 const io = new IOServer(httpServer, { cors: true });
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
+
+	socket.on('disconnect', () => {
+		console.log(`Déconnexion du client ${socket.id}`);
+	});
 });
