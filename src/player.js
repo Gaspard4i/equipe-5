@@ -119,7 +119,6 @@ export function movePlayer() {
 	}
 	player.checkStainCollisionFromCenter();
 
-	// Update camera position
 	camera.x = player.x - canvas.width / 2;
 	camera.y = player.y - canvas.height / 2;
 }
@@ -155,3 +154,26 @@ canvas.addEventListener('mousedown', () => {
 export function drawPlayer(context) {
 	player.draw(context);
 }
+canvas.addEventListener('touchmove', event => {
+	const touch = event.touches[0];
+	const rect = canvas.getBoundingClientRect();
+	const touchX = touch.clientX - rect.left + camera.x;
+	const touchY = touch.clientY - rect.top + camera.y;
+
+	const dx = touchX - player.x;
+	const dy = touchY - player.y;
+	player.updateMouseMovement(dx, dy);
+});
+
+canvas.addEventListener('touchstart', event => {
+	const touch = event.touches[0];
+	const rect = canvas.getBoundingClientRect();
+	const touchX = touch.clientX - rect.left + camera.x;
+	const touchY = touch.clientY - rect.top + camera.y;
+
+	const dx = touchX - player.x;
+	const dy = touchY - player.y;
+	player.updateMouseMovement(dx, dy);
+
+	player.useMouse = true;
+});
