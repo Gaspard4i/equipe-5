@@ -113,7 +113,7 @@ export class Player extends Entity {
 }
 
 ///////////////////INITIALISATION///////////////////
-const player = new Player(30, canvas.width / 2, canvas.height / 2, 0, 0, false);
+export const player = new Player(30, canvas.width / 2, canvas.height / 2, 0, 0, false);
 
 ///////////////////FONCTIONS GLOBALES///////////////////
 export function movePlayer() {
