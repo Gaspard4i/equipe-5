@@ -8,6 +8,7 @@ import {
 import { stains, createNewStains } from './entities.js';
 import { camera } from './camera.js';
 import { io } from 'socket.io-client';
+import { player } from './player.js';
 const socket = io(window.location.hostname + ':8080');
 
 socket.on('log', () => {
@@ -15,12 +16,17 @@ socket.on('log', () => {
 });
 
 function draw() {
-	context.save();
-	context.translate(-camera.x, -camera.y);
+    context.save();
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    context.translate(centerX, centerY);
+    context.scale(camera.zoom, camera.zoom);
+    context.translate(-player.x, -player.y);
 	drawPlayer(context);
-	createNewStains();
-	stains.forEach(entity => entity.draw(context));
-	context.restore();
+    createNewStains();
+    stains.forEach(entity => entity.draw(context));
+    
+    context.restore();
 }
 
 function render() {
