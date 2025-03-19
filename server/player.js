@@ -1,8 +1,7 @@
 import { Entity } from './entity.js';
-import { camera } from './camera.js';
-import { maxWidth, maxHeight } from './index.js';
-import { BonusType } from './bonus.js';
-import { stains } from './index.js';
+import { Camera } from './camera.js';
+import { maxWidth, maxHeight } from '../server/index.js';
+import { BonusType } from './bonus.js'; // Correction du chemin
 
 ///////////////////CONSTANTES///////////////////
 const PLAYER_COLOR = 'rgba(255, 255, 255)';
@@ -22,29 +21,30 @@ export class Player extends Entity {
 		this.isAccelerating = false;
 		this.isSliding = false;
 		this.score = 0;
+		this.camera = new Camera();
 	}
 
-	movePlayer() {
-		player.x += player.vx;
-		player.y += player.vy;
+	movePlayer(canvas) {
+		this.x += this.vx;
+		this.y += this.vy;
 
-		player.applyFriction();
+		this.applyFriction();
 
-		const radius = player.radius;
+		const radius = this.radius;
 
-		if (player.x - radius < 0) {
-			player.x = radius;
-		} else if (player.x + radius > maxWidth) {
-			player.x = maxWidth - radius;
+		if (this.x - radius < 0) {
+			this.x = radius;
+		} else if (this.x + radius > maxWidth) {
+			this.x = maxWidth - radius;
 		}
-		if (player.y - radius < 0) {
-			player.y = radius;
-		} else if (player.y + radius > maxHeight) {
-			player.y = maxHeight - radius;
+		if (this.y - radius < 0) {
+			this.y = radius;
+		} else if (this.y + radius > maxHeight) {
+			this.y = maxHeight - radius;
 		}
 
-		camera.x = player.x - canvas.width / 2;
-		camera.y = player.y - canvas.height / 2;
+		this.camera.x = this.x - canvas.width / 2;
+		this.camera.y = this.y - canvas.height / 2;
 	}
 
 	updateMouseMovement(dx, dy, canvaWidth, canvasHeight) {

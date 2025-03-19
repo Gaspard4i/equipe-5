@@ -1,5 +1,7 @@
 import http from 'http';
 import { Server as IOServer } from 'socket.io';
+import { Player } from './player.js';
+import { Camera } from './camera.js';
 
 export const maxWidth = 10000;
 export const maxHeight = 10000;
@@ -16,12 +18,40 @@ httpServer.listen(port, () => {
 });
 
 const io = new IOServer(httpServer, { cors: true });
+const players = {}; // Liste des joueurs connectés
+
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
 
-	player = new Player(30, canvas.width / 2, canvas.height / 2, 0, 0, false);
+	// Crée un nouveau joueur et une caméra pour ce client
+	const player = new Player(30, maxWidth / 2, maxHeight / 2, 0, 0, false);
+	player.camera = new Camera();
+	players[socket.id] = player;
+
+	socket.on('updatePlayer', data => {
+		// Met à jour la position et les propriétés du joueur associé
+		const player = players[socket.id];
+		if (player) {
+			player.x = data.x;
+			player.y = data.y;
+			player.vx = data.vx;
+			player.vy = data.vy;
+			player.radius = data.radius;
+
+			// Met à jour la caméra du joueur
+			player.camera.x = player.x - maxWidth / 2;
+			player.camera.y = player.y - maxHeight / 2;
+			player.camera.adjustZoomForPlayerSize(player.radius);
+		}
+	});
+
+	// Envoie les données des joueurs à tous les clients
+	setInterval(() => {
+		io.emit('updatePlayers', players);
+	}, 1000 / 60);
 
 	socket.on('disconnect', () => {
 		console.log(`Déconnexion du client ${socket.id}`);
+		delete players[socket.id]; // Supprime le joueur de la liste
 	});
 });

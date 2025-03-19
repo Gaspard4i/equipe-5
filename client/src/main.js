@@ -8,19 +8,72 @@ import { handleKeyDown, handleKeyUp } from './input.js';
 
 const socket = io(window.location.hostname + ':8080');
 
-socket.on('log', () => {
-	console.log('logged');
+// Initialisation du joueur local
+const player = {
+	id: null,
+	x: 100,
+	y: 100,
+	vx: 0,
+	vy: 0,
+	radius: 30,
+	keys: {},
+	useKeyboard: true,
+	camera: { x: 0, y: 0, zoom: 1 }, // Ajout de la caméra locale
+};
+
+// Liste des autres joueurs
+const otherPlayers = {};
+
+// Gestion des événements socket
+socket.on('connect', () => {
+	player.id = socket.id;
+	console.log(`Connecté au serveur avec l'ID :`, player.id);
 });
+
+socket.on('updatePlayers', players => {
+	// Met à jour les autres joueurs et le joueur local
+	for (const id in players) {
+		if (id === player.id) {
+			Object.assign(player, players[id]); // Met à jour les données du joueur local
+		} else {
+			otherPlayers[id] = players[id];
+		}
+	}
+});
+
+socket.on('playerDisconnected', id => {
+	delete otherPlayers[id];
+});
+
+// Envoi des données du joueur local au serveur
+function sendPlayerData() {
+	socket.emit('updatePlayer', {
+		id: player.id,
+		x: player.x,
+		y: player.y,
+		vx: player.vx,
+		vy: player.vy,
+		radius: player.radius,
+	});
+}
 
 function draw() {
 	context.save();
 	const centerX = canvas.width / 2;
 	const centerY = canvas.height / 2;
 	context.translate(centerX, centerY);
-	context.scale(camera.zoom, camera.zoom);
+	context.scale(player.camera.zoom, player.camera.zoom); // Utilise la caméra locale
 	context.translate(-player.x, -player.y);
-	drawPlayer(context);
-	createNewStains();
+
+	// Dessine le joueur local
+	drawPlayer(context, player);
+
+	// Dessine les autres joueurs
+	for (const id in otherPlayers) {
+		drawPlayer(context, otherPlayers[id]);
+	}
+
+	// Dessine les entités (taches et bonus)
 	stains.forEach(entity => entity.draw(context));
 
 	context.restore();
@@ -35,7 +88,9 @@ function render() {
 document.addEventListener('keydown', handleKeyDown);
 document.addEventListener('keyup', handleKeyUp);
 
-setInterval(movePlayer, 1000 / 60);
+setInterval(() => {
+	sendPlayerData(); // Envoie les données du joueur au serveur
+}, 1000 / 60);
 
 observeCanvas(draw, render);
 

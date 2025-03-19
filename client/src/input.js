@@ -1,7 +1,6 @@
-
 import { canvas } from './canvas.js';
 
-export function handleKeyDown(event) {
+export function handleKeyDown(event, player) {
 	if (event.key === 'Shift') {
 		player.keys['Shift'] = true;
 	} else {
@@ -10,7 +9,7 @@ export function handleKeyDown(event) {
 	}
 }
 
-export function handleKeyUp(event) {
+export function handleKeyUp(event, player) {
 	if (event.key === 'Shift') {
 		player.keys['Shift'] = false;
 	} else {
@@ -36,7 +35,7 @@ canvas.addEventListener('touchmove', event => {
 	const touch = event.touches[0];
 	const rect = canvas.getBoundingClientRect();
 	const touchX = touch.clientX - rect.left + camera.x;
-	const touchY = touch.clientY - rect.top + camera.y;
+	const touchY = touch.clientY - camera.y;
 
 	const dx = touchX - player.x;
 	const dy = touchY - player.y;
@@ -47,7 +46,7 @@ canvas.addEventListener('touchstart', event => {
 	const touch = event.touches[0];
 	const rect = canvas.getBoundingClientRect();
 	const touchX = touch.clientX - rect.left + camera.x;
-	const touchY = touch.clientY - rect.top + camera.y;
+	const touchY = touch.clientY - camera.y;
 
 	const dx = touchX - player.x;
 	const dy = touchY - player.y;
