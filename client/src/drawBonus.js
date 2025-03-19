@@ -1,6 +1,4 @@
-import { Stain } from './stain.js';
-
-export class Bonus extends Stain {
+export class drawBonus {
 	constructor(radius, x, y) {
 		const bonus = Math.random() < 0.5 ? BonusType.VITESSE : BonusType.TAILLE;
 		super(radius + 50, x, y);

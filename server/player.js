@@ -1,7 +1,7 @@
 import { Entity } from './entity.js';
 import { camera } from './camera.js';
 import { maxWidth, maxHeight } from './index.js';
-import { BonusType } from '../client/src/bonus.js';
+import { BonusType } from './bonus.js';
 import { stains } from './index.js';
 
 ///////////////////CONSTANTES///////////////////

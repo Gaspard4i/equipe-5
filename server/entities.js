@@ -1,7 +1,7 @@
 import { Stain } from './stain.js';
 import { Bonus } from './bonus.js';
-const maxWidth = 10000;
-const maxHeight = 10000;
+import { maxHeight, maxWidth } from './index.js';
+
 export const stains = [];
 for (let i = 0; i < 1000; i++) {
 	const x = Math.floor(Math.random() * maxWidth - 10);

@@ -1,8 +1,5 @@
 import { canvas, context, observeCanvas } from './canvas.js';
-import { stains, createNewStains } from './entities.js';
-import { camera } from '../../server/camera.js';
 import { io } from 'socket.io-client';
-import { player } from '../../server/index.js';
 import { drawPlayer } from './playerDraw.js';
 import { handleKeyDown, handleKeyUp } from './input.js';
 
