@@ -1,10 +1,10 @@
-import { Entity } from '../entity.js';
+import { Entity } from '../server/entity.js';
 
 export class Stain extends Entity {
 	constructor(radius, x, y) {
 		super(radius, x, y);
 		this.image = new Image();
-		this.image.src = 'src/assets/stain.png';
+		this.image.src = '../../src/assets/stain.png';
 	}
 
 	draw(context) {

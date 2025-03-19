@@ -1,10 +1,7 @@
-import { camera } from './camera.js';
+import { camera } from '../server/camera.js';
 
 export const canvas = document.querySelector('.gameCanvas');
 export const context = canvas.getContext('2d');
-
-export const maxWidth = 10000;
-export const maxHeight = 10000;
 
 export function resampleCanvas(draw, render) {
 	canvas.width = canvas.clientWidth;

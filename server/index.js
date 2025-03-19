@@ -2,6 +2,9 @@ import http from 'http';
 import { argv } from 'process';
 import { Server as IOServer } from 'socket.io';
 
+export const maxWidth = 10000;
+export const maxHeight = 10000;
+
 const httpServer = http.createServer((req, res) => {
 	res.statusCode = 200;
 	res.setHeader('Content-Type', 'text/plain');

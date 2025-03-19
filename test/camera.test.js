@@ -1,4 +1,4 @@
-import { camera } from '../src/camera.js';
+import { camera } from '../server/camera.js';
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 

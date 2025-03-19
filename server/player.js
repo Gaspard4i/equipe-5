@@ -1,6 +1,6 @@
-import { canvas, maxWidth, maxHeight } from '../src/canvas.js';
 import { Entity } from './entity.js';
-import { camera } from '../src/camera.js';
+import { camera } from './camera.js';
+import { maxWidth, maxHeight } from '../server/index.js';
 
 ///////////////////CONSTANTES///////////////////
 const PLAYER_COLOR = 'rgba(255, 255, 255)';
@@ -21,6 +21,48 @@ export class Player extends Entity {
 		this.isSliding = false;
 	}
 
+
+	movePlayer() {
+		player.x += player.vx;
+		player.y += player.vy;
+
+		player.applyFriction();
+
+		const radius = player.radius;
+
+		if (player.x - radius < 0) {
+			player.x = radius;
+		} else if (player.x + radius > maxWidth) {
+			player.x = maxWidth - radius;
+		}
+		if (player.y - radius < 0) {
+			player.y = radius;
+		} else if (player.y + radius > maxHeight) {
+			player.y = maxHeight - radius;
+		}
+
+		camera.x = player.x - canvas.width / 2;
+		camera.y = player.y - canvas.height / 2;
+	}
+
+	updateMouseMovement(dx, dy, canvaWidth, canvasHeight) {
+		if (this.useKeyboard) return;
+	
+		const maxDistance = Math.min(canvaWidth, canvaHeight) / 4;
+		const distance = Math.sqrt(dx * dx + dy * dy);
+		const speedFactor = Math.min(distance / maxDistance, 1);
+		const speed =
+			speedFactor * (this.isAccelerating ? ACCELERATED_SPEED : this.speed);
+	
+		if (distance > this.radius) {
+			this.vx = (dx / distance) * speed;
+			this.vy = (dy / distance) * speed;
+		} else {
+			this.vx = 0;
+			this.vy = 0;
+		}
+	}   
+
 	///////////////////DÉPLACEMENT///////////////////
 	updateVelocity() {
 		if (!this.useKeyboard) return;
@@ -36,24 +78,6 @@ export class Player extends Entity {
 		this.isSliding = false;
 	}
 
-	updateMouseMovement(dx, dy) {
-		if (this.useKeyboard) return;
-
-		const maxDistance = Math.min(canvas.width, canvas.height) / 4;
-		const distance = Math.sqrt(dx * dx + dy * dy);
-		const speedFactor = Math.min(distance / maxDistance, 1);
-		const speed =
-			speedFactor * (this.isAccelerating ? ACCELERATED_SPEED : this.speed);
-
-		if (distance > this.radius) {
-			this.vx = (dx / distance) * speed;
-			this.vy = (dy / distance) * speed;
-		} else {
-			this.vx = 0;
-			this.vy = 0;
-		}
-	}
-
 	applyFriction() {
 		if (this.isSliding) {
 			this.vx *= FRICTION;
@@ -67,28 +91,4 @@ export class Player extends Entity {
 			}
 		}
 	}
-}
-
-///////////////////FONCTIONS GLOBALES///////////////////
-export function movePlayer() {
-	player.x += player.vx;
-	player.y += player.vy;
-
-	player.applyFriction();
-
-	const radius = player.radius;
-
-	if (player.x - radius < 0) {
-		player.x = radius;
-	} else if (player.x + radius > maxWidth) {
-		player.x = maxWidth - radius;
-	}
-	if (player.y - radius < 0) {
-		player.y = radius;
-	} else if (player.y + radius > maxHeight) {
-		player.y = maxHeight - radius;
-	}
-
-	camera.x = player.x - canvas.width / 2;
-	camera.y = player.y - canvas.height / 2;
 }
