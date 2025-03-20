@@ -10,7 +10,7 @@ const socket = io(window.location.hostname + ':8080');
 const stains = []; // Liste des entités (taches et bonus)
 
 // Initialisation du joueur local
-const player = {
+const currentPlayer = {
 	id: null,
 	x: 100,
 	y: 100,
@@ -28,17 +28,20 @@ const otherPlayers = {};
 
 // Gestion des événements socket
 socket.on('connect', () => {
-	player.id = socket.id;
-	console.log(`Connecté au serveur avec l'ID :`, player.id);
+	currentPlayer.id = socket.id;
+	console.log(`Connecté au serveur avec l'ID :`, currentPlayer.id);
 });
 
 socket.on('updatePlayers', players => {
-	// Met à jour les autres joueurs et le joueur local
-	for (const id in players) {
-		if (id === player.id) {
-			Object.assign(player, players[id]); // Met à jour les données du joueur local
+	// Met à jour les autres joueurs et le joueur	 local
+	console.log(players)
+	for (const player in players) {
+		console.log("id " + player.id);
+		if (player.id === currentPlayer.id) {
+			Object.assign(currentPlayer, players[player.id]); // Met à jour les données du joueur local
 		} else {
-			otherPlayers[id] = players[id];
+			console.log("else");
+			otherPlayers[player.id] = players[player.id];
 		}
 	}
 });
@@ -63,19 +66,19 @@ socket.on('playerDisconnected', id => {
 // Envoi des données du joueur local au serveur
 function sendPlayerData() {
 	socket.emit('updatePlayer', {
-		id: player.id,
-		x: player.x,
-		y: player.y,
-		vx: player.vx,
-		vy: player.vy,
-		radius: player.radius,
+		id: currentPlayer.id,
+		x: currentPlayer.x,
+		y: currentPlayer.y,
+		vx: currentPlayer.vx,
+		vy: currentPlayer.vy,
+		radius: currentPlayer.radius,
 	});
 }
 
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	camera.adjustCameraPosition(player, canvas.width, canvas.height);
-	drawGame(context, player, otherPlayers, stains, camera); // Ajout de camera
+	camera.adjustCameraPosition(currentPlayer, canvas.width, canvas.height);
+	drawGame(context, currentPlayer, otherPlayers, stains, camera); // Ajout de camera
 	requestAnimationFrame(render);
 }
 

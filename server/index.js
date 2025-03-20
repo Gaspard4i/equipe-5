@@ -25,8 +25,8 @@ export const stains = new Stains(10); // Create 1000 stains
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
 
-	const player = new Player(30, maxWidth / 2, maxHeight / 2, 0, 0, false);
-	players[socket.id] = player;
+	const player = new Player(socket.id, 30, maxWidth / 2, maxHeight / 2, 0, 0, false);
+	players.push(player);
 
 	socket.on('updatePlayer', data => {
 		// Met à jour la position et les propriétés du joueur associé
