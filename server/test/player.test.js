@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it, before } from 'node:test';
 import { Player } from '../player.js';
-import { BonusType } from '../src/bonus.js';
+import { BonusType } from '../bonus.js';
 
 describe('Player Module', () => {
 	it('Score should up when player grow', () => {
