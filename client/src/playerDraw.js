@@ -34,9 +34,8 @@ export class PlayerDraw {
 			context.stroke();
 		}
 	}
-
 }
 
-export function drawPlayer(context) {
+export function drawPlayer(context, player) {
 	player.draw(context);
 }
