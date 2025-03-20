@@ -2,6 +2,7 @@ import { Entity } from './entity.js';
 import { Camera } from './camera.js';
 import { maxWidth, maxHeight } from '../server/index.js';
 import { BonusType } from './bonus.js'; // Correction du chemin
+import { stains } from './entities.js';
 
 ///////////////////CONSTANTES///////////////////
 const PLAYER_COLOR = 'rgba(255, 255, 255)';
