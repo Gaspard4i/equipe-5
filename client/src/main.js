@@ -1,13 +1,13 @@
 import { canvas, context, observeCanvas, drawGame } from './canvas.js';
 import { io } from 'socket.io-client';
-import { drawPlayer } from './playerDraw.js';
-import { handleKeyDown, handleKeyUp } from './input.js';
 import { Camera } from './camera.js'; // Import de la caméra
 //camera
 //player
 //stains, createNewStains
 
 const socket = io(window.location.hostname + ':8080');
+
+const stains = []; // Liste des entités (taches et bonus)
 
 // Initialisation du joueur local
 const player = {
@@ -42,6 +42,19 @@ socket.on('updatePlayers', players => {
 	}
 });
 
+socket.on('updateStains', serverStains => {
+	// Vérifie si serverStains.stains est un tableau avant de le décomposer
+	if (serverStains && Array.isArray(serverStains.stains)) {
+		stains.length = 0;
+		stains.push(...serverStains.stains);
+	} else {
+		console.error(
+			'Les données reçues pour les taches ne sont pas valides :',
+			serverStains
+		);
+	}
+});
+
 socket.on('playerDisconnected', id => {
 	delete otherPlayers[id];
 });
@@ -58,31 +71,9 @@ function sendPlayerData() {
 	});
 }
 
-function draw() {
-	context.save();
-	const centerX = canvas.width / 2;
-	const centerY = canvas.height / 2;
-	context.translate(centerX, centerY);
-	context.scale(player.camera.zoom, player.camera.zoom); // Utilise la caméra locale
-	context.translate(-player.camera.x, -player.camera.y); // Mise à jour avec la caméra locale
-
-	// Dessine le joueur local
-	drawPlayer(context, player);
-
-	// Dessine les autres joueurs
-	for (const id in otherPlayers) {
-		drawPlayer(context, otherPlayers[id]);
-	}
-
-	// Dessine les entités (taches et bonus)
-	stains.forEach(entity => entity.draw(context));
-
-	context.restore();
-}
-
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	draw();
+	drawGame(context, player, otherPlayers, stains);
 	requestAnimationFrame(render);
 }
 

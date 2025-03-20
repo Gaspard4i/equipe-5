@@ -21,6 +21,15 @@ export function drawPlayer(context, player) {
 	context.beginPath();
 	context.arc(player.x, player.y, player.radius, 0, 2 * Math.PI);
 	context.fill();
+
+	if (!player.useKeyboard) {
+		context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+		context.lineWidth = 2;
+		const maxDistance = Math.min(canvas.width, canvas.height) / 4;
+		context.beginPath();
+		context.arc(player.x, player.y, maxDistance, 0, 2 * Math.PI);
+		context.stroke();
+	}
 }
 
 // Méthode pour dessiner une tache
@@ -53,52 +62,35 @@ export function drawBonus(context, bonus) {
 }
 
 // Méthode principale pour dessiner le jeu
-export function drawGame(context, gameState) {
-	context.clearRect(0, 0, canvas.width, canvas.height);
+export function drawGame(context, player, otherPlayers, stains) {
+	context.save();
+	const centerX = canvas.width / 2;
+	const centerY = canvas.height / 2;
+	context.translate(centerX, centerY);
+	context.scale(player.camera.zoom, player.camera.zoom);
+	context.translate(-player.camera.x, -player.camera.y);
 
-	gameState.players.forEach(player => drawPlayer(context, player));
+	// Dessine le joueur local
+	drawPlayer(context, player);
 
-	gameState.stains.forEach(stain => {
-		if (stain.type === 'VITESSE' || stain.type === 'TAILLE') {
-			drawBonus(context, stain);
+	// Dessine les autres joueurs
+	for (const id in otherPlayers) {
+		drawPlayer(context, otherPlayers[id]);
+	}
+
+	// Dessine les entités (taches et bonus)
+	stains.forEach(entity => {
+		if (entity.type === 'VITESSE' || entity.type === 'TAILLE') {
+			drawBonus(context, entity);
 		} else {
-			drawStain(context, stain);
+			drawStain(context, entity);
 		}
 	});
-}
 
-export function drawBonus(context, bonus) {
-	const image = new Image();
-	image.src =
-		bonus.type === 'VITESSE'
-			? 'src/assets/stain_green.png'
-			: 'src/assets/stain_blue.png';
-	context.drawImage(
-		image,
-		bonus.x - bonus.radius,
-		bonus.y - bonus.radius,
-		bonus.radius * 2,
-		bonus.radius * 2
-	);
+	context.restore();
 }
 
 export const BonusType = {
 	VITESSE: 'VITESSE',
 	TAILLE: 'TAILLE',
 };
-
-export function drawPlayer(context, player) {
-	context.fillStyle = 'rgba(255, 255, 255)';
-	context.beginPath();
-	context.arc(player.x, player.y, player.radius, 0, 2 * Math.PI);
-	context.fill();
-
-	if (!player.useKeyboard) {
-		context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-		context.lineWidth = 2;
-		const maxDistance = Math.min(canvas.width, canvas.height) / 4;
-		context.beginPath();
-		context.arc(player.x, player.y, maxDistance, 0, 2 * Math.PI);
-		context.stroke();
-	}
-}

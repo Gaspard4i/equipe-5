@@ -50,7 +50,7 @@ io.on('connection', socket => {
 		io.emit('updatePlayers', players);
 		io.emit('updateBots', bots);
 		io.emit('updateStains', stains);
-	}, 1000 / 60);
+	}, 20);
 
 	socket.on('disconnect', () => {
 		console.log(`Déconnexion du client ${socket.id}`);
