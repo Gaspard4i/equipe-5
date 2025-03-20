@@ -2,9 +2,8 @@ import { Player } from './player.js';
 import { maxWidth, maxHeight } from './constants.js';
 
 export class Bots {
-	constructor(count, canva) {
+	constructor(count) {
 		this.bots = [];
-		this.canva = canva;
 		this.createBots(count);
 	}
 
@@ -21,7 +20,7 @@ export class Bots {
 		this.bots.forEach(bot => {
 			bot.vx = Math.random() * 2 - 1; 
 			bot.vy = Math.random() * 2 - 1; 
-			bot.movePlayer(this.canva);
+			bot.movePlayer();
 		});
 	}
 }

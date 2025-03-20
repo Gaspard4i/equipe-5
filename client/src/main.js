@@ -1,4 +1,4 @@
-import { canvas, context, observeCanvas } from './canvas.js';
+import { canvas, context, observeCanvas, drawGame } from './canvas.js';
 import { io } from 'socket.io-client';
 import { drawPlayer } from './playerDraw.js';
 import { handleKeyDown, handleKeyUp } from './input.js';
@@ -82,59 +82,8 @@ function draw() {
 
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	player.camera.adjustCameraPosition(player, canvas.width, canvas.height); 
 	draw();
 	requestAnimationFrame(render);
 }
 
-document.addEventListener('keydown', handleKeyDown);
-document.addEventListener('keyup', handleKeyUp);
-
-setInterval(() => {
-	sendPlayerData(); // Envoie les données du joueur au serveur
-}, 1000 / 60);
-
-observeCanvas(draw, render);
-
-// Empêcher le zoom avec la molette et les raccourcis clavier
-document.addEventListener(
-	'wheel',
-	function (e) {
-		if (e.ctrlKey) {
-			e.preventDefault();
-		}
-	},
-	{ passive: false }
-);
-
-// Empêcher le zoom par pincement sur les appareils tactiles
-document.addEventListener(
-	'touchstart',
-	function (e) {
-		if (e.touches.length > 1) {
-			e.preventDefault();
-		}
-	},
-	{ passive: false }
-);
-
-document.addEventListener(
-	'touchmove',
-	function (e) {
-		if (e.touches.length > 1) {
-			e.preventDefault();
-		}
-	},
-	{ passive: false }
-);
-
-// Empêcher les gestes tactiles spécifiques (iOS Safari)
-document.addEventListener('gesturestart', function (e) {
-	e.preventDefault();
-});
-document.addEventListener('gesturechange', function (e) {
-	e.preventDefault();
-});
-document.addEventListener('gestureend', function (e) {
-	e.preventDefault();
-});
+observeCanvas(() => {}, render);
