@@ -19,8 +19,9 @@ const player = {
 	radius: 30,
 	keys: {},
 	useKeyboard: true,
-	camera: new Camera(), // Utilisation de la caméra locale
 };
+
+const camera = new Camera();
 
 // Liste des autres joueurs
 const otherPlayers = {};
@@ -73,6 +74,7 @@ function sendPlayerData() {
 
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
+	camera.adjustCameraPosition(player, canvas.width, canvas.height);
 	drawGame(context, player, otherPlayers, stains);
 	requestAnimationFrame(render);
 }
