@@ -67,7 +67,7 @@ export function drawGame(context, player, otherPlayers, stains, camera) {
 	const centerX = canvas.width / 2;
 	const centerY = canvas.height / 2;
 	context.translate(centerX, centerY);
-	context.scale(camera.zoom, player.camera.zoom);
+	context.scale(camera.zoom, camera.zoom);
 	context.translate(-camera.x, -camera.y);
 
 	// Dessine le joueur local

@@ -11,7 +11,6 @@ const stains = []; // Liste des entités (taches et bonus)
 
 // Initialisation du joueur local
 const currentPlayer = {
-	id: null,
 	x: 100,
 	y: 100,
 	vx: 0,
@@ -28,21 +27,17 @@ const otherPlayers = {};
 
 // Gestion des événements socket
 socket.on('connect', () => {
-	currentPlayer.id = socket.id;
-	console.log(`Connecté au serveur avec l'ID :`, currentPlayer.id);
+	console.log(`Connecté au serveur avec l'ID :`, socket.id);
 });
 
 socket.on('updatePlayers', players => {
-	// Met à jour les autres joueurs et le joueur	 local
-	console.log(players)
-	for (const player in players) {
-		console.log("id " + player.id);
-		if (player.id === currentPlayer.id) {
-			Object.assign(currentPlayer, players[player.id]); // Met à jour les données du joueur local
-		} else {
-			console.log("else");
-			otherPlayers[player.id] = players[player.id];
-		}
+	otherPlayers.length = 0;
+	const player = players.get(socket.id);
+	if (player === undefined) {
+		console.error('Impossible de trouver le joueur local');
+		return;
+	} else {
+		Object.assign(currentPlayer, player);
 	}
 });
 
@@ -64,7 +59,11 @@ socket.on('playerDisconnected', id => {
 });
 
 // Envoi des données du joueur local au serveur
-function sendPlayerData() {
+function sendPlayerData(update) {
+	// Applique les mises à jour au joueur local
+	Object.assign(currentPlayer, update);
+
+	// Envoie les données mises à jour au serveur
 	socket.emit('updatePlayer', {
 		id: currentPlayer.id,
 		x: currentPlayer.x,
@@ -77,6 +76,7 @@ function sendPlayerData() {
 
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
+	// console.log(currentPlayer);
 	camera.adjustCameraPosition(currentPlayer, canvas.width, canvas.height);
 	drawGame(context, currentPlayer, otherPlayers, stains, camera); // Ajout de camera
 	requestAnimationFrame(render);

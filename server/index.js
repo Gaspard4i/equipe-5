@@ -18,19 +18,19 @@ httpServer.listen(port, () => {
 });
 
 const io = new IOServer(httpServer, { cors: true });
-const players = []; // Liste des joueurs connectés
+const players = new Map(); // Utilisation d'une Map pour stocker les joueurs
 const bots = new Bots(10); // Create 10 bots
 export const stains = new Stains(10); // Create 1000 stains
 
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
 
-	const player = new Player(socket.id, 30, maxWidth / 2, maxHeight / 2, 0, 0, false);
-	players.push(player);
+	const player = new Player(30, maxWidth / 2, maxHeight / 2, 0, 0, false);
+	players.set(socket.id, player); // Ajout du joueur dans la Map
 
 	socket.on('updatePlayer', data => {
 		// Met à jour la position et les propriétés du joueur associé
-		const player = players[socket.id];
+		const player = players.get(socket.id);
 		if (player) {
 			player.x = data.x;
 			player.y = data.y;
@@ -44,13 +44,13 @@ io.on('connection', socket => {
 	setInterval(() => {
 		bots.updateBots();
 		stains.updateStains();
-		io.emit('updatePlayers', players);
+		io.emit('updatePlayers', Array.from(players.values()));
 		io.emit('updateBots', bots);
 		io.emit('updateStains', stains);
 	}, 20);
 
 	socket.on('disconnect', () => {
 		console.log(`Déconnexion du client ${socket.id}`);
-		delete players[socket.id]; // Supprime le joueur de la liste
+		players.delete(socket.id);
 	});
 });
