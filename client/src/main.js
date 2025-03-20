@@ -2,6 +2,7 @@ import { canvas, context, observeCanvas } from './canvas.js';
 import { io } from 'socket.io-client';
 import { drawPlayer } from './playerDraw.js';
 import { handleKeyDown, handleKeyUp } from './input.js';
+import { Camera } from './camera.js'; // Import de la caméra
 //camera
 //player
 //stains, createNewStains
@@ -18,7 +19,7 @@ const player = {
 	radius: 30,
 	keys: {},
 	useKeyboard: true,
-	camera: { x: 0, y: 0, zoom: 1 }, // Ajout de la caméra locale
+	camera: new Camera(), // Utilisation de la caméra locale
 };
 
 // Liste des autres joueurs
@@ -63,7 +64,7 @@ function draw() {
 	const centerY = canvas.height / 2;
 	context.translate(centerX, centerY);
 	context.scale(player.camera.zoom, player.camera.zoom); // Utilise la caméra locale
-	context.translate(-player.x, -player.y);
+	context.translate(-player.camera.x, -player.camera.y); // Mise à jour avec la caméra locale
 
 	// Dessine le joueur local
 	drawPlayer(context, player);
@@ -81,6 +82,7 @@ function draw() {
 
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
+	player.camera.adjustCameraPosition(player, canvas.width, canvas.height); 
 	draw();
 	requestAnimationFrame(render);
 }
