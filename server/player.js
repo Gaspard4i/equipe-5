@@ -82,20 +82,22 @@ export class Player extends Entity {
 	}
 
 	checkStainCollisionFromCenter(stains) {
-		for (let i = stains.length - 1; i >= 0; i--) {
-			const stain = stains[i];
-			const stainCenterX = stain.x + STAIN_SIZE / 2;
-			const stainCenterY = stain.y + STAIN_SIZE / 2;
+		// console.log(stains.get(0));
+		for (let i = stains.size() - 1; i >= 0; i--) {
+			// console.log('check col');
+			const stain = stains.get(i);
+			const stainCenterX = stain.x + 20 / 2;
+			const stainCenterY = stain.y + 20 / 2;
 			const dx = stainCenterX - this.x;
 			const dy = stainCenterY - this.y;
 			const distance = Math.sqrt(dx * dx + dy * dy);
 
-			const stainRadius = STAIN_SIZE / 2;
+			const stainRadius = 20 / 2;
 			const overlap = this.radius - distance + stainRadius;
 			if (overlap >= stainRadius * 0.75) {
 				stains.splice(i, 1);
 				this.grow();
-				if (stain instanceof Bonus) this.bonus(stain.bonus);
+				// if (stain instanceof Bonus) this.bonus(stain.bonus);
 			}
 		}
 	}

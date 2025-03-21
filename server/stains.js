@@ -28,4 +28,16 @@ export class Stains {
 			this.stains.push(entity);
 		}
 	}
+
+	size() {
+		return this.stains.length;
+	}
+
+	get(i) {
+		return this.stains[i];
+	}
+
+	splice(i, val) {
+		this.stains.splice(i, val);
+	}
 }
