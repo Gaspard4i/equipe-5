@@ -49,9 +49,15 @@ export const processGameTick = () => {
 				Shift: !!(bitmask & 0b10000),
 			};
 			player.updateVelocity(); // Met à jour la vitesse en fonction des touches
-			player.movePlayer(stains); // Déplace le joueur
+			//TODO version clavier
 		}
 	}
+
+	// Déplace tous les joueurs
+	for (const player of Object.values(players)) {
+		player.movePlayer(stains); // Déplace le joueur
+	}
+
 	// Met à jour les bots et les taches
 	bots.updateBots();
 	stains.updateStains();
@@ -62,6 +68,18 @@ export const processGameTick = () => {
 	io.emit('updateStains', stains);
 };
 
+function handleMouseMovement(socketId, x, y, canvaWidth, canvaHeight) {
+	const player = players[socketId];
+	const dx = x - canvaWidth / 2;
+	const dy = y - canvaHeight / 2;
+	player.updateMouseMovement(dx, dy, canvaWidth, canvaHeight);
+}
+
+function handleMouseMovementAcceleration(socketId, bool) {
+	const player = players[socketId];
+	player.isAccelerating = bool;
+}
+
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
 
@@ -69,6 +87,14 @@ io.on('connection', socket => {
 
 	socket.on('input', bitmask => {
 		handleInput(socket.id, bitmask);
+	});
+
+	socket.on('mousemove', ({ x, y, canvaWidth, canvaHeight }) => {
+		handleMouseMovement(socket.id, x, y, canvaWidth, canvaHeight);
+	});
+
+	socket.on('mousedown', ({ bool }) => {
+		handleMouseMovementAcceleration(socket.id, bool);
 	});
 
 	socket.on('disconnect', () => {
