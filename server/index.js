@@ -20,7 +20,7 @@ httpServer.listen(port, () => {
 const io = new IOServer(httpServer, { cors: true });
 const players = {}; // Utilisation d'un objet pour stocker les joueurs
 const bots = new Bots(10); // Create 10 bots
-export const stains = new Stains(10); // Create 1000 stains
+export const stains = new Stains(100); // Create 1000 stains
 const inputQueue = {}; // File d'attente des entrées par joueur
 const TICK_RATE = 1000 / 60; // 60Hz
 
@@ -38,15 +38,6 @@ io.on('connection', socket => {
 	socket.on('input', bitmask => {
 		inputQueue[socket.id] = bitmask; // Stocke les entrées dans la file d'attente
 	});
-
-	// Envoie les données des joueurs à tous les clients
-	setInterval(() => {
-		bots.updateBots();
-		stains.updateStains();
-		io.emit('updatePlayers', players); // Envoi des joueurs sous forme d'objet
-		io.emit('updateBots', bots);
-		io.emit('updateStains', stains);
-	}, 20);
 
 	socket.on('disconnect', () => {
 		console.log(`Déconnexion du client ${socket.id}`);
