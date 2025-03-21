@@ -83,55 +83,28 @@ function drawDebugPlayer(context, player) {
 }
 
 export function drawPlayer(context, player) {
-	const svgPathHalo = new Path2D(
-		'M224 344.014c91.806 0 168.451 16.119 187.402 37.647l-72.776-105.819-5.25 1.297c-66.625 16.406-152.141 16.406-218.766 0l-5.25-1.297L35.411 382.97h.105C52.45 360.789 130.341 344.014 224 344.014z'
-	);
-	const svgPathBase = new Path2D(
-		'M224.001 199.986c-112.706 0-205.704-35.71-221.406-82.149C.92 190.31 0 195.113 0 200.014c0 53.019 100.288 96 224 96s224-42.981 224-96c0-4.902-.92-9.705-2.594-14.402-15.701 46.438-108.7 82.149-221.406 82.149z'
-	);
-	const svgPathAlien = new Path2D(
-		'M224 184.014c18.03 0 33.206-1.34 46.65-3.567 5.751-13.656 9.35-29.322 9.35-45.433 0-30.875-25.125-56-56-56s-56 25.125-56 56c0 16.11 3.598 31.776 9.35 45.433 13.444 2.227 28.62 3.567 46.65 3.567z'
-	);
-	const svgPathEyesLeft = new Path2D(
-		'M197.909 147.403c-20.257 0-20.257-10.128 0-10.128s20.257 10.128 0 10.128z'
-	);
-	const svgPathEyesRight = new Path2D(
-		'M250.008 147.414c-10.128 0-10.128-20.256 0-20.256s10.128 20.256 0 20.256z'
-	);
-	const svgPathLight = new Path2D(
-		'M219.53 79.466c-3.406-14.012-15.948-24.452-31.009-24.452-17.673 0-32 14.326-32 32 0 11.631 6.267 21.714 15.548 27.316 7.721-19.305 25.875-33.12 47.461-34.864z'
-	);
-
 	context.save();
-	context.translate(player.x, player.y);
-	context.scale(player.radius / 224, player.radius / 224); // Adapter la taille du SVG
-
-	// Dessiner le halo
-	context.fillStyle = '#deefdd';
-	context.fill(svgPathHalo);
-
-	// Dessiner la base du vaisseau
-	context.fillStyle = '#7f8fa0';
-	context.fill(svgPathBase);
-
-	// Dessiner l'alien
-	context.fillStyle = '#acc6b9';
-	context.fill(svgPathAlien);
-
-	// Dessiner les yeux de l'alien
-	context.fillStyle = '#000000';
-	context.fill(svgPathEyesLeft);
-	context.fill(svgPathEyesRight);
-
-	// Dessiner la lumière sur la vitre
-	context.fillStyle = '#dce7f6';
-	context.fill(svgPathLight);
-
+	context.fillStyle = 'white';
+	context.beginPath();
+	context.arc(player.x, player.y, player.radius, 0, 2 * Math.PI); // Utilisation correcte du rayon
+	context.fill();
 	context.restore();
 
 	if (debugPlayerEnabled) {
-		drawDebugPlayer(context, player); // Appel de la méthode de débogage
+		drawDebugPlayer(context, player); // méthode de débogage
 	}
+
+	// score du joueur
+	context.save();
+	context.fillStyle = 'black';
+	context.font = '16px Arial';
+	context.textAlign = 'center';
+	context.fillText(
+		`Score: ${player.score}`,
+		player.x,
+		player.y - player.radius - 10
+	); // au dessus
+	context.restore();
 }
 
 function drawStain(context, stain) {
