@@ -3,7 +3,6 @@ import { maxWidth, maxHeight } from './constants.js';
 import { BonusType } from './bonus.js'; // Correction du chemin
 
 ///////////////////CONSTANTES///////////////////
-const PLAYER_COLOR = 'rgba(255, 255, 255)';
 const BASE_PLAYER_SPEED = 10;
 const ACCELERATED_SPEED = 15;
 const FRICTION = 0.9;
@@ -110,16 +109,18 @@ export class Player extends Entity {
 
 	///////////////////DÉPLACEMENT///////////////////
 	updateVelocity() {
-		// if (!this.useKeyboard) return;
 		this.applyAcceleration();
-		this.vx = 0;
-		this.vy = 0;
+		let dx =
+			(this.keys['ArrowRight'] ? 5 : 0) - (this.keys['ArrowLeft'] ? 5 : 0);
+		let dy = (this.keys['ArrowDown'] ? 5 : 0) - (this.keys['ArrowUp'] ? 5 : 0);
+		const magnitude = Math.sqrt(dx * dx + dy * dy);
+		if (magnitude > 0) {
+			dx /= magnitude;
+			dy /= magnitude;
+		}
 		const speed = this.isAccelerating ? ACCELERATED_SPEED : this.speed;
-		if (this.keys['ArrowRight']) this.vx += speed;
-		if (this.keys['ArrowLeft']) this.vx -= speed;
-		if (this.keys['ArrowUp']) this.vy -= speed;
-		if (this.keys['ArrowDown']) this.vy += speed;
-
+		this.vx = dx * speed;
+		this.vy = dy * speed;
 		this.isSliding = false;
 	}
 
