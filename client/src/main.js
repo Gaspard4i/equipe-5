@@ -1,4 +1,11 @@
-import { canvas, context, observeCanvas, drawGame } from './canvas.js';
+import {
+	canvas,
+	context,
+	observeCanvas,
+	drawGame,
+	setDebugCameraMode,
+	setDebugPlayerMode,
+} from './canvas.js';
 import { io } from 'socket.io-client';
 import { Camera } from './camera.js'; // Import de la caméra
 import { handleKeyDown, handleKeyUp } from './input.js';
@@ -72,7 +79,6 @@ socket.on('playerDisconnected', id => {
 
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	// console.log(currentPlayer);
 	camera.adjustCameraPosition(currentPlayer, canvas.width, canvas.height);
 	drawGame(context, currentPlayer, otherPlayers, stains, camera); // Ajout de camera
 	requestAnimationFrame(render);
@@ -104,5 +110,9 @@ window.addEventListener('keydown', event => {
 		event.preventDefault();
 	}
 });
+
+// Activer le mode de débogage de la caméra
+setDebugCameraMode(false);
+setDebugPlayerMode(false);
 
 observeCanvas(() => {}, render);
