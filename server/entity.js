@@ -7,8 +7,4 @@ export class Entity {
 		this.x = x;
 		this.y = y;
 	}
-
-	draw(context) {
-		throw new Error("La méthode 'draw()' doit être implémentée.");
-	}
 }
