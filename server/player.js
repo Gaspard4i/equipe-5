@@ -1,11 +1,12 @@
 import { Entity } from './entity.js';
-import { maxWidth, maxHeight } from './constants.js';
-import { BonusType } from './bonus.js'; // Correction du chemin
-
-///////////////////CONSTANTES///////////////////
-const BASE_PLAYER_SPEED = 10;
-const ACCELERATED_SPEED = 15;
-const FRICTION = 0.9;
+import {
+	maxWidth,
+	maxHeight,
+	BASE_PLAYER_SPEED,
+	ACCELERATED_SPEED,
+	FRICTION,
+} from './constants.js';
+import { BonusType } from './bonus.js';
 
 ///////////////////CLASSE PLAYER///////////////////
 export class Player extends Entity {
@@ -137,6 +138,14 @@ export class Player extends Entity {
 			if (this.vx === 0 && this.vy === 0) {
 				this.isSliding = false;
 			}
+		}
+		if (
+			!this.keys['ArrowRight'] &&
+			!this.keys['ArrowLeft'] &&
+			!this.keys['ArrowUp'] &&
+			!this.keys['ArrowDown']
+		) {
+			this.isSliding = true;
 		}
 	}
 }
