@@ -20,7 +20,7 @@ httpServer.listen(port, () => {
 const io = new IOServer(httpServer, { cors: true });
 const players = {}; // Utilisation d'un objet pour stocker les joueurs
 const bots = new Bots(10); // Create 10 bots
-export const stains = new Stains(100); // Create 1000 stains
+export const stains = new Stains(10); // Create 1000 stains
 const inputQueue = {}; // File d'attente des entrées par joueur
 const TICK_RATE = 1000 / 60; // 60Hz
 
@@ -32,24 +32,11 @@ io.on('connection', socket => {
 
 	// Écoute et affiche tous les événements reçus
 	socket.onAny((eventName, ...args) => {
-		console.log(`Événement reçu : ${eventName}`, args);
-	});
-
-	socket.on('updatePlayer', data => {
-		// Met à jour la position et les propriétés du joueur associé
-		const player = players[socket.id];
-		if (player) {
-			player.x = data.x;
-			player.y = data.y;
-			player.vx = data.vx;
-			player.vy = data.vy;
-			player.radius = data.radius;
-		}
+		console.log(`Input reçu : ${eventName}`, args);
 	});
 
 	socket.on('input', bitmask => {
 		inputQueue[socket.id] = bitmask; // Stocke les entrées dans la file d'attente
-		//TODO gérer les entrées
 	});
 
 	// Envoie les données des joueurs à tous les clients
@@ -82,7 +69,7 @@ setInterval(() => {
 				Shift: !!(bitmask & 0b10000),
 			};
 			player.updateVelocity(); // Met à jour la vitesse en fonction des touches
-			//TODO gérer les entrées
+			player.movePlayer(stains); // Déplace le joueur
 		}
 	}
 	// Met à jour les bots et les taches

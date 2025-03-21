@@ -10,7 +10,7 @@ const FRICTION = 0.9;
 
 ///////////////////CLASSE PLAYER///////////////////
 export class Player extends Entity {
-	constructor(radius, x, y, vx, vy, useKeyboard = false) {
+	constructor(radius, x, y, vx, vy, useKeyboard = true) {
 		super(radius, x, y);
 		this.vx = vx;
 		this.vy = vy;
@@ -110,7 +110,7 @@ export class Player extends Entity {
 
 	///////////////////DÉPLACEMENT///////////////////
 	updateVelocity() {
-		if (!this.useKeyboard) return;
+		// if (!this.useKeyboard) return;
 		this.applyAcceleration();
 		this.vx = 0;
 		this.vy = 0;

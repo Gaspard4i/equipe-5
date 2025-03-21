@@ -12,11 +12,11 @@ const stains = []; // Liste des entités (taches et bonus)
 
 // Initialisation du joueur local
 const currentPlayer = {
+	radius: 30,
 	x: 100,
 	y: 100,
 	vx: 0,
 	vy: 0,
-	radius: 30,
 	keys: {},
 	useKeyboard: true,
 };
@@ -42,7 +42,11 @@ socket.on('updatePlayers', players => {
 	// Met à jour les joueurs existants ou en ajoute de nouveaux
 	for (const id in players) {
 		if (id === socket.id) {
+			// console.log('players[id]');
+			// console.log(players[id]);
 			Object.assign(currentPlayer, players[id]);
+			// console.log('currentPlayer');
+			// console.log(currentPlayer);
 		} else {
 			otherPlayers[id] = { ...players[id], vx: 0, vy: 0 }; // Initialise la vitesse
 		}
@@ -65,22 +69,6 @@ socket.on('updateStains', serverStains => {
 socket.on('playerDisconnected', id => {
 	delete otherPlayers[id];
 });
-
-// Envoi des données du joueur local au serveur
-function sendPlayerData(update) {
-	// Applique les mises à jour au joueur local
-	Object.assign(currentPlayer, update);
-
-	// Envoie les données mises à jour au serveur
-	socket.emit('updatePlayer', {
-		id: currentPlayer.id,
-		x: currentPlayer.x,
-		y: currentPlayer.y,
-		vx: currentPlayer.vx,
-		vy: currentPlayer.vy,
-		radius: currentPlayer.radius,
-	});
-}
 
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
