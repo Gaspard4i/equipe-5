@@ -44,6 +44,8 @@ io.on('connection', socket => {
 		delete players[socket.id]; // Suppression du joueur de l'objet
 		delete inputQueue[socket.id]; // Supprime les entrées du joueur déconnecté
 	});
+
+	handleMouseMovement();
 });
 
 // Traitement des entrées à un tick rate fixe
@@ -60,9 +62,14 @@ setInterval(() => {
 				Shift: !!(bitmask & 0b10000),
 			};
 			player.updateVelocity(); // Met à jour la vitesse en fonction des touches
-			player.movePlayer(stains); // Déplace le joueur
 		}
 	}
+
+	// Déplace tous les joueurs
+	for (const player of Object.values(players)) {
+		player.movePlayer(stains); // Déplace le joueur
+	}
+
 	// Met à jour les bots et les taches
 	bots.updateBots();
 	stains.updateStains();
@@ -72,3 +79,15 @@ setInterval(() => {
 	io.emit('updateBots', bots);
 	io.emit('updateStains', stains);
 }, TICK_RATE);
+
+function handleMouseMovement() {
+	socket.on('mousemove', ({ x, y, canvaWidth, canvaHeight }) => {
+		const dx = x - (player.x % canvaWidth);
+		const dy = y - (player.y % canvaHeight);
+		player.updateMouseMovement(dx, dy, canvaWidth, canvaHeight);
+	});
+
+	socket.on('mousedown', ({ bool }) => {
+		player.isAccelerating = bool;
+	});
+}
