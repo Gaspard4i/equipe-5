@@ -4,7 +4,7 @@ export class Bonus extends Stain {
 	constructor(radius, x, y) {
 		const bonusType =
 			Math.random() < 0.5 ? BonusType.VITESSE : BonusType.TAILLE;
-		super(radius + 50, x, y);
+		super(radius, x, y);
 		this.type = bonusType;
 	}
 }
