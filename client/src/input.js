@@ -1,10 +1,12 @@
 import { socket } from './main.js';
 import { canvas } from './canvas.js';
 
+/////////////////// CLAVIER ///////////////////
+
 const pressedKeys = {}; // État local des touches
 let lastBitmask = 0; // Dernier bitmask envoyé
 
-// Mappage des touches vers des bits
+// mappage des touches vers des bits
 const keyMap = {
 	ArrowUp: 0b0001,
 	ArrowDown: 0b0010,
@@ -13,7 +15,7 @@ const keyMap = {
 	Shift: 0b10000,
 };
 
-// Fonction pour calculer le bitmask actuel
+// calcule le bitmask actuel
 function computeBitmask() {
 	return Object.keys(pressedKeys).reduce(
 		(bitmask, key) => bitmask | (keyMap[key] || 0),
@@ -21,7 +23,7 @@ function computeBitmask() {
 	);
 }
 
-// Gestion des événements clavier
+// événements clavier
 export function handleKeyDown(event) {
 	if (keyMap[event.key]) {
 		pressedKeys[event.key] = true;
@@ -34,20 +36,19 @@ export function handleKeyUp(event) {
 	}
 }
 
-// Envoi des entrées au serveur à 60Hz
+// envoi des entrées au serv
 function sendInputs() {
 	const currentBitmask = computeBitmask();
 	if (currentBitmask !== lastBitmask) {
 		socket.emit('input', currentBitmask); // Envoi uniquement si le bitmask a changé
 		lastBitmask = currentBitmask;
 	}
-	requestAnimationFrame(sendInputs); // Limié à 60Hz
+	requestAnimationFrame(sendInputs); // limité à 60Hz
 }
 
 sendInputs(); // Démarre la boucle d'envoi
 
-///////////////////MOUSE AND TOUCH///////////////////
-// Si jamais vous regardez Mr.Fritsch, j'ai regardé un tuto : https://grafikart.fr/tutoriels/debounce-throttle-642
+/////////////////// SOURIS  ///////////////////
 
 let lastMousePosition = { x: 0, y: 0 };
 let lastDirection = { dx: 0, dy: 0 };
@@ -99,10 +100,10 @@ canvas.addEventListener('mousemove', event => {
 	}
 
 	lastMousePosition = { x, y };
-	emitMouseMove(x, y, canvaWidth, canvaHeight); // Envoi limité
+	emitMouseMove(x, y, canvaWidth, canvaHeight); // envoi limité
 });
 
-// Optimise le mvmnt continu
+// optimise le mouvement continu
 setInterval(() => {
 	if (!isMouseMoving && (lastDirection.dx !== 0 || lastDirection.dy !== 0)) {
 		const simulatedX = lastMousePosition.x + lastDirection.dx * 10;
@@ -129,3 +130,29 @@ setInterval(() => {
 canvas.addEventListener('mousedown', () => {
 	socket.emit('mousedown', true);
 });
+
+/////////////////// PRÉVENTION DU ZOOM ///////////////////
+
+export function preventZoom() {
+	window.addEventListener(
+		'wheel',
+		event => {
+			if (event.ctrlKey) {
+				event.preventDefault();
+			}
+		},
+		{ passive: false }
+	);
+
+	window.addEventListener('keydown', event => {
+		if (
+			event.ctrlKey &&
+			(event.key === '+' ||
+				event.key === '-' ||
+				event.key === '0' ||
+				event.key === '=')
+		) {
+			event.preventDefault();
+		}
+	});
+}

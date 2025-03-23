@@ -9,14 +9,12 @@ import {
 } from './canvas.js';
 import { io } from 'socket.io-client';
 import { Camera } from './camera.js';
-import { handleKeyDown, handleKeyUp } from './input.js';
+import { handleKeyDown, handleKeyUp, preventZoom } from './input.js';
 
 export const socket = io(window.location.hostname + ':8080');
 
-const stains = []; // Liste des entités (taches et bonus)
-const bots = []; // Liste des bots
-
-// Initialisation du joueur local
+const stains = [];
+const bots = [];
 const currentPlayer = {
 	radius: 30,
 	x: 100,
@@ -26,41 +24,30 @@ const currentPlayer = {
 	keys: {},
 	useKeyboard: true,
 };
-
 export const camera = new Camera();
-
-// Liste des autres joueurs
 const otherPlayers = {};
 
-// Gestion des événements socket
+// événements socket
 socket.on('connect', () => {
 	console.log(`Connecté au serveur avec l'ID :`, socket.id);
 });
 
 socket.on('updatePlayers', players => {
-	// Réinitialise les autres joueurs
 	for (const id in otherPlayers) {
 		if (!players[id]) {
 			delete otherPlayers[id];
 		}
 	}
-
-	// Met à jour les joueurs existants ou en ajoute de nouveaux
 	for (const id in players) {
 		if (id === socket.id) {
-			// console.log('players[id]');
-			// console.log(players[id]);
 			Object.assign(currentPlayer, players[id]);
-			// console.log('currentPlayer');
-			// console.log(currentPlayer);
 		} else {
-			otherPlayers[id] = { ...players[id], vx: 0, vy: 0 }; // Initialise la vitesse
+			otherPlayers[id] = { ...players[id], vx: 0, vy: 0 };
 		}
 	}
 });
 
 socket.on('updateStains', serverStains => {
-	// Vérifie si serverStains.stains est un tableau avant de le décomposer
 	if (serverStains && Array.isArray(serverStains.stains)) {
 		stains.length = 0;
 		stains.push(...serverStains.stains);
@@ -73,7 +60,6 @@ socket.on('updateStains', serverStains => {
 });
 
 socket.on('updateBots', serverBots => {
-	// Vérifie si serverBots.bots est un tableau avant de le décomposer
 	if (serverBots && Array.isArray(serverBots.bots)) {
 		bots.length = 0;
 		bots.push(...serverBots.bots);
@@ -92,38 +78,14 @@ socket.on('playerDisconnected', id => {
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	camera.adjustCameraPosition(currentPlayer, canvas.width, canvas.height);
-	drawGame(context, currentPlayer, otherPlayers, stains, bots, camera); // Ajout de camera
+	drawGame(context, currentPlayer, otherPlayers, stains, bots, camera);
 	requestAnimationFrame(render);
 }
 
-// Ajout des gestionnaires d'événements clavier
 window.addEventListener('keydown', event => handleKeyDown(event));
 window.addEventListener('keyup', event => handleKeyUp(event));
+preventZoom();
 
-// Interdiction de zoomer sur la page
-window.addEventListener(
-	'wheel',
-	event => {
-		if (event.ctrlKey) {
-			event.preventDefault();
-		}
-	},
-	{ passive: false }
-);
-
-window.addEventListener('keydown', event => {
-	if (
-		event.ctrlKey &&
-		(event.key === '+' ||
-			event.key === '-' ||
-			event.key === '0' ||
-			event.key === '=')
-	) {
-		event.preventDefault();
-	}
-});
-
-// debug
 setDebugCameraMode(false);
 setDebugPlayerMode(false);
 setDebugEntityMode(false);
