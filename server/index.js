@@ -53,11 +53,11 @@ export const initializePlayer = socketId => {
 export const createBots = count => {
 	for (let i = 0; i < count; i++) {
 		const bot = new BotPlayer(
-			30,
+			DEFAULT_PLAYER.radius,
 			Math.random() * MAX_WIDTH,
 			Math.random() * MAX_HEIGHT,
-			0,
-			0
+			DEFAULT_PLAYER.velocityX,
+			DEFAULT_PLAYER.velocityY
 		);
 		players[bot.id] = bot;
 	}

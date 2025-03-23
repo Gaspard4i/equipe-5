@@ -1,6 +1,12 @@
 import { Stain } from './stain.js';
 import { Bonus } from './bonus.js';
-import { MAX_WIDTH, MAX_HEIGHT } from './constants.js';
+import {
+	MAX_WIDTH,
+	MAX_HEIGHT,
+	BONUS_STAIN_CHANCE,
+	STAIN_SIZE,
+	BONUS_SIZE,
+} from './constants.js';
 
 export class Stains {
 	constructor(count) {
@@ -10,8 +16,8 @@ export class Stains {
 	}
 
 	initializeStains() {
-		this.stains = []; // Réinitialise la liste des taches
-		this.createStains(this.count); // Crée le nombre de taches spécifié
+		this.stains = []; // reset tâches
+		this.createStains(this.count);
 	}
 
 	createStains(count) {
@@ -19,7 +25,9 @@ export class Stains {
 			const x = Math.floor(Math.random() * MAX_WIDTH - 10);
 			const y = Math.floor(Math.random() * MAX_HEIGHT - 10);
 			const stain =
-				Math.random() < 0.1 ? new Bonus(20, x, y) : new Stain(20, x, y);
+				Math.random() < BONUS_STAIN_CHANCE
+					? new Bonus(BONUS_SIZE, x, y)
+					: new Stain(STAIN_SIZE, x, y);
 			this.stains.push(stain);
 		}
 	}
@@ -32,7 +40,10 @@ export class Stains {
 			while (!isValidPosition) {
 				const x = Math.random() * MAX_WIDTH;
 				const y = Math.random() * MAX_HEIGHT;
-				stain = Math.random() < 0.1 ? new Bonus(20, x, y) : new Stain(20, x, y);
+				stain =
+					Math.random() < BONUS_STAIN_CHANCE
+						? new Bonus(BONUS_SIZE, x, y)
+						: new Stain(STAIN_SIZE, x, y);
 
 				isValidPosition = !Object.values(players).some(player => {
 					const dx = player.x - stain.x;

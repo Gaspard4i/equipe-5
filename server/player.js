@@ -6,6 +6,13 @@ import {
 	ACCELERATED_SPEED,
 	MAX_WIDTH,
 	MAX_HEIGHT,
+	EAT_THRESHOLD,
+	ABSORB_AREA_THRESHOLD,
+	INVINCIBILITY_TIME,
+	PLAYER_EAT_BONUS,
+	STAIN_SCORE,
+	BONUS_SPEED_MULTIPLIER,
+	BONUS_SIZE_MULTIPLIER,
 } from './constants.js';
 
 ///////////////////CLASSE PLAYER///////////////////
@@ -34,7 +41,7 @@ export class Player extends Entity {
 		this.isInvincible = true;
 		setTimeout(() => {
 			this.isInvincible = false;
-		}, 3000);
+		}, INVINCIBILITY_TIME);
 	}
 
 	movePlayer(stains, grid, players, io) {
@@ -58,8 +65,7 @@ export class Player extends Entity {
 	}
 
 	canEat(otherPlayer) {
-		if (this.radius < otherPlayer.radius * 1.05) return false;
-
+		if (this.radius < otherPlayer.radius * EAT_THRESHOLD) return false;
 		const dx = this.x - otherPlayer.x;
 		const dy = this.y - otherPlayer.y;
 		const distanceSquared = dx * dx + dy * dy;
@@ -86,12 +92,12 @@ export class Player extends Entity {
 				);
 
 		const otherPlayerArea = Math.PI * r2 * r2;
-		return intersectionArea >= 0.55 * otherPlayerArea;
+		return intersectionArea >= ABSORB_AREA_THRESHOLD * otherPlayerArea;
 	}
 
 	absorb(otherPlayer) {
 		this.radius += otherPlayer.radius /*/ 2*/;
-		this.score += otherPlayer.score + 1000;
+		this.score += otherPlayer.score + PLAYER_EAT_BONUS;
 		this.updateSpeed();
 	}
 
@@ -145,17 +151,17 @@ export class Player extends Entity {
 	}
 
 	grow() {
-		this.score += 15;
-		this.radius += Math.sqrt(15 / 100);
+		this.score += STAIN_SCORE;
+		this.radius += Math.sqrt(STAIN_SCORE / 100);
 		// console.log('Score = ' + this.score);
 		this.updateSpeed();
 	}
 
 	bonus(bt) {
 		if (bt === BonusType.VITESSE) {
-			this.speed *= 2;
+			this.speed *= BONUS_SPEED_MULTIPLIER;
 		} else if (bt === BonusType.TAILLE) {
-			this.radius *= 1.5;
+			this.radius *= BONUS_SIZE_MULTIPLIER;
 		}
 	}
 

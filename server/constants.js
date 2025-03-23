@@ -1,23 +1,45 @@
-export const PORT = 8080; // port serv base (8080)
+///////////////////CONFIGURATION DU SERVEUR///////////////////
 
-export const NUM_BOTS = 50; // nb de bots base (50)
-export const NUM_STAINS = 1500; // nb de taches base (1500)
-export const CHUNK_SIZE = 200; // taille des chunks (200)
+export const PORT = 8080; // port du serv
+export const TICK_RATE = 1000 / 60; // fq des ticks (FPS)
 
-export const MAX_WIDTH = 12000; // largeur de la map (10000)
-export const MAX_HEIGHT = 6000; // hauteur de la map (5000)
+///////////////////CONFIGURATION DE LA MAP///////////////////
+
+export const MAX_WIDTH = 12000; // Largeur
+export const MAX_HEIGHT = 5000; // Hauteur
+export const CHUNK_SIZE = 200; // taille des chunks
+
+///////////////////CONFIGURATION DES JOUEURS///////////////////
 
 export const DEFAULT_PLAYER = {
-	radius: 30, // rayon du joueur base (30)
-	x: 6000, // pos x base (6000)
-	y: 3000, // pos y base (3000)
-	velocityX: 0, // vitesse x base (0)
-	velocityY: 0, // viteese y base (0)
+	radius: 30, // rayon de base
+	x: 6000, // pos x
+	y: 3000, // pos y
+	velocityX: 0, // vit initiale en X
+	velocityY: 0, // vit initiale en Y
 	isAccelerating: false,
 };
+export const BASE_PLAYER_SPEED = 7; // vit de base
+export const ACCELERATED_SPEED = 2; // Vitesse en accélération
+// export const FRICTION = 0.98; // TODO : friction
+export const INVINCIBILITY_TIME = 3000; // tps invincibilité au spawn (ms)
+export const EAT_THRESHOLD = 1.05; // pourcentage de graille ( il faut être X% plus large pour manger un joueur)
+export const ABSORB_AREA_THRESHOLD = 0.55; // pourcentage de l'air à absorber pour manger un joueur
+export const PLAYER_EAT_BONUS = 1000; // bonus pour avoir graille un joueur
 
-export const BASE_PLAYER_SPEED = 10; // vitesse de base base (10)
-export const ACCELERATED_SPEED = 15; // vitesse accélérée base (15)
-export const FRICTION = 0.9; // slide coef base (0.9)
+///////////////////CONFIGURATION DES TACHES///////////////////
 
-export const TICK_RATE = 1000 / 60; // fps ou hz base (1000/60)
+export const NUM_STAINS = 1000; // nb de taches
+export const STAIN_SIZE = 20; // taille des taches
+export const STAIN_SCORE = 15; // bonus pour chaque tache mangée
+
+///////////////////CONFIGURATION DES BONUS///////////////////
+
+export const BONUS_STAIN_CHANCE = 0.05; // taux de tache bonus
+export const BONUS_SIZE = 20; // taille des bonus
+export const BONUS_SPEED_MULTIPLIER = 2; // multiplicateur de vitesse pour le bonus de vitesse
+export const BONUS_SIZE_MULTIPLIER = 1.5; // multiplicateur de taille pour le bonus de taille
+
+///////////////////CONFIGURATION DES BOTS///////////////////
+
+export const NUM_BOTS = 50; // Nombre de bots initial
