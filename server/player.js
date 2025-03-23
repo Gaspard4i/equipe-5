@@ -160,6 +160,9 @@ export class Player extends Entity {
 	bonus(bt) {
 		if (bt === BonusType.VITESSE) {
 			this.speed *= BONUS_SPEED_MULTIPLIER;
+			setTimeout(() => {
+				this.speed /= BONUS_SPEED_MULTIPLIER;
+			}, INVINCIBILITY_TIME);
 		} else if (bt === BonusType.TAILLE) {
 			this.radius *= BONUS_SIZE_MULTIPLIER;
 		}
@@ -204,7 +207,9 @@ export class Player extends Entity {
 			dx /= magnitude;
 			dy /= magnitude;
 		}
-		const speed = this.isAccelerating ? ACCELERATED_SPEED : this.speed;
+		const speed = this.isAccelerating
+			? ACCELERATED_SPEED * this.speed
+			: this.speed;
 		this.vx = dx * speed;
 		this.vy = dy * speed;
 		this.isSliding = false;
