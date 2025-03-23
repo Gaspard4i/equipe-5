@@ -21,7 +21,6 @@ export const DEFAULT_PLAYER = {
 };
 export const BASE_PLAYER_SPEED = 14; // vit de base
 export const ACCELERATED_SPEED = 2; // Vitesse en accélération
-// export const FRICTION = 0.98; // TODO : friction
 export const INVINCIBILITY_TIME = 3000; // tps invincibilité au spawn (ms)
 export const EAT_THRESHOLD = 1.05; // pourcentage de graille ( il faut être X% plus large pour manger un joueur)
 export const ABSORB_AREA_THRESHOLD = 0.55; // pourcentage de l'air à absorber pour manger un joueur

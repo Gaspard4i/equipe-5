@@ -138,7 +138,9 @@ function handleMouseMovementAcceleration(socketId, bool) {
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
 
-	initializePlayer(socket.id);
+	socket.on('joinGame', () => {
+		initializePlayer(socket.id);
+	});
 
 	socket.on('input', bitmask => {
 		handleInput(socket.id, bitmask);

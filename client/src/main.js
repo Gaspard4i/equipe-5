@@ -62,8 +62,20 @@ socket.on('redirect', url => {
 
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	camera.adjustCameraPosition(currentPlayer, canvas.width, canvas.height);
-	drawGame(context, currentPlayer, otherPlayers, stains, [], camera);
+
+	if (canvas.classList.contains('background')) {
+		// Mode background : ne pas afficher le joueur local
+		camera.x = 6000;
+		camera.y = 2500;
+		camera.zoom = Math.min(canvas.width / 12000, canvas.height / 5000) * 5; // Zoom un peu plus
+		drawGame(context, {}, otherPlayers, stains, [], camera);
+	} else {
+		// Mode normal : afficher le joueur local
+		camera.adjustCameraPosition(currentPlayer, canvas.width, canvas.height);
+		camera.zoom *= 1.1; // Zoom un peu plus
+		drawGame(context, currentPlayer, otherPlayers, stains, [], camera);
+	}
+
 	requestAnimationFrame(render);
 }
 
@@ -76,4 +88,19 @@ setDebugPlayerMode(false);
 setDebugEntityMode(false);
 setDebugGridMode(false);
 
+// Gestion du bouton pour démarrer le jeu
+document.getElementById('start-game').addEventListener('click', () => {
+	const startScreen = document.getElementById('start-screen');
+	const canvas = document.querySelector('.gameCanvas');
+	const score = document.querySelector('.score');
+
+	startScreen.style.display = 'none'; // Cache l'écran de démarrage
+	canvas.classList.remove('background'); // Retire la classe d'arrière-plan
+	score.classList.remove('hidden'); // Affiche la zone de score
+
+	// Informer le serveur que le joueur rejoint le jeu
+	socket.emit('joinGame');
+});
+
+// Démarre le rendu du jeu en arrière-plan
 observeCanvas(() => {}, render);

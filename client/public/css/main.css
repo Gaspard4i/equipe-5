@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Chewy&display=swap');
+
 canvas {
     background-color: #34495e;
     width: 100%;
@@ -5,4 +7,81 @@ canvas {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Désactive le défilement */
+    width: 100vw;
+    height: 100vh;
+}
+
+#start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: rgba(52, 73, 94, 0.5); 
+    color: #ecf0f1;
+    font-family: 'Luckiest Guy', cursive;
+    z-index: 1;
+    position: relative;
+    padding: 1rem;
+    text-align: center;
+}
+
+#start-screen h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+}
+
+#start-screen button {
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    background-color: #27ae60;
+    color: #ecf0f1;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#start-screen button:hover {
+    background-color: #2ecc71;
+}
+
+canvas.background {
+    pointer-events: none; 
+    z-index: 0;
+}
+
+@media (max-width: 768px) {
+    #start-screen h1 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    #start-screen button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #start-screen h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    #start-screen button {
+        padding: 0.6rem 1rem;
+        font-size: 1rem;
+    }
 }
