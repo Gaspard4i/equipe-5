@@ -10,7 +10,7 @@ import {
 
 ///////////////////CLASSE PLAYER///////////////////
 export class Player extends Entity {
-	constructor(radius, x, y, vx, vy, useKeyboard = true) {
+	constructor(radius, x, y, vx, vy, useKeyboard = true, pseudo = undefined) {
 		super(radius, x, y);
 		this.vx = vx;
 		this.vy = vy;
@@ -20,6 +20,7 @@ export class Player extends Entity {
 		this.isAccelerating = false;
 		this.isSliding = false;
 		this.score = 0;
+		this.pseudo = pseudo;
 	}
 
 	movePlayer(stains, grid) {
