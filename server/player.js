@@ -150,9 +150,9 @@ export class Player extends Entity {
 
 	bonus(bt) {
 		if (bt === BonusType.VITESSE) {
-			this.baseSpeed *= BONUS_SPEED_MULTIPLIER;
+			this.baseSpeed = BASE_PLAYER_SPEED * BONUS_SPEED_MULTIPLIER;
 			setTimeout(() => {
-				this.baseSpeed /= BONUS_SPEED_MULTIPLIER;
+				this.baseSpeed = BASE_PLAYER_SPEED;
 			}, INVINCIBILITY_TIME);
 		} else if (bt === BonusType.TAILLE) {
 			this.radius *= BONUS_SIZE_MULTIPLIER;
