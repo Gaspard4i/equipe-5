@@ -290,7 +290,7 @@ export function drawPlayer(context, player) {
 	if (player.justEatSomeone) {
 		//TODO
 	}
-	console.log(player.pseudo);
+	// console.log(player.pseudo);
 
 	const pseudo = player.pseudo || 'Joueur'; // Valeur par défaut si pseudo est falsy
 	context.save();
@@ -315,7 +315,6 @@ function drawStain(context, stain) {
 	);
 
 	// couleurs
-	// TODO: Ajouter les couleurs de plein de sauces diférente
 	const baseColor = '#E5C985 ';
 	const shadowColor = '#B99850 ';
 

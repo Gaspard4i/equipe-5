@@ -1,7 +1,12 @@
 import { canvas, context, observeCanvas, drawGame } from './canvas.js';
 import { io } from 'socket.io-client';
 import { Camera } from './camera.js';
-import { handleKeyDown, handleKeyUp, preventZoom } from './input.js';
+import {
+	handleKeyDown,
+	handleKeyUp,
+	preventZoom,
+	setCurrentControlMode,
+} from './input.js';
 import { updateProgressBar } from './progressBar.js';
 import {
 	setDebugCameraMode,
@@ -119,7 +124,6 @@ function setupGlobalEvents() {
 	document.addEventListener('keydown', event => {
 		const activeElement = document.activeElement;
 		if (activeElement && activeElement.tagName === 'INPUT') return;
-		event.preventDefault();
 		if (!canvas.classList.contains('background')) {
 			handleKeyDown(event);
 		}
@@ -128,7 +132,6 @@ function setupGlobalEvents() {
 	document.addEventListener('keyup', event => {
 		const activeElement = document.activeElement;
 		if (activeElement && activeElement.tagName === 'INPUT') return;
-		event.preventDefault();
 		if (!canvas.classList.contains('background')) {
 			handleKeyUp(event);
 		}
@@ -216,6 +219,7 @@ function setupSettingsButton() {
 
 function setControlMode(mode) {
 	localStorage.setItem('controlMode', mode);
+	setCurrentControlMode(mode);
 
 	if (mode === 'mouse') {
 		// console.log('Mode souris activé');
