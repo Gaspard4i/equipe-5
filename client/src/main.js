@@ -127,7 +127,7 @@ function setupGlobalEvents() {
 }
 
 setDebugCameraMode(DEBUG);
-setDebugPlayerMode(DEBUG);
+setDebugPlayerMode(false);
 setDebugEntityMode(DEBUG);
 setDebugGridMode(DEBUG);
 
@@ -228,7 +228,7 @@ function setupStartButton() {
 		event.preventDefault();
 		const startScreen = document.querySelector('.start-screen');
 		const gameOverScreen = document.querySelector('.game-over-screen');
-		startScreen.classList.remove('hidden');; // Montre l'écran de démarrage
+		startScreen.classList.remove('hidden'); // Montre l'écran de démarrage
 		gameOverScreen.classList.add('hidden');
 	});
 
