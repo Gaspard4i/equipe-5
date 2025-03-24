@@ -161,8 +161,6 @@ io.on('connection', socket => {
 		handlePlayerAction(socket.id, player => {
 			// active ou désactive l'accel
 			player.isAccelerating = isAccelerating;
-			// Debug pour vérifier la valeur reçue
-			console.log(`Joueur ${socket.id} - Accélération: ${isAccelerating}`);
 		})
 	);
 
