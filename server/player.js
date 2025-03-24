@@ -1,5 +1,5 @@
 import { Entity } from './entity.js';
-import { BonusType } from './bonus.js';
+import { Bonus, BonusType } from './bonus.js';
 import { v4 as uuidv4 } from 'uuid';
 import {
 	BASE_PLAYER_SPEED,
@@ -171,6 +171,7 @@ export class Player extends Entity {
 				const index = stains.getAll().indexOf(stain);
 				if (index !== -1) {
 					stains.splice(index, 1);
+					if (stain instanceof Bonus) this.bonus(stain.type);
 					this.grow();
 				}
 			}
