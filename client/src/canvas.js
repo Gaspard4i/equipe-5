@@ -290,6 +290,15 @@ export function drawPlayer(context, player) {
 	if (player.justEatSomeone) {
 		//TODO
 	}
+	console.log(player.pseudo);
+
+	const pseudo = player.pseudo || 'Joueur'; // Valeur par défaut si pseudo est falsy
+	context.save();
+	context.font = '16px Arial';
+	context.fillStyle = 'white';
+	context.textAlign = 'center';
+	context.fillText(pseudo, player.x, player.y - player.radius - 10);
+	context.restore();
 }
 
 function adjustSplatterPosition(context, stain) {

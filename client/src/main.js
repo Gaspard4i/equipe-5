@@ -102,24 +102,26 @@ function render() {
 
 // Initialisation des événements globaux
 function setupGlobalEvents() {
-    // Empêcher le comportement par défaut des touches, qu'on soit dans le jeu ou non
-    document.addEventListener('keydown', event => {
+	// Empêcher le comportement par défaut des touches, sauf pour la zone de texte
+	document.addEventListener('keydown', event => {
+		const activeElement = document.activeElement;
+		if (activeElement && activeElement.tagName === 'INPUT') return; // Ignore si dans une zone de texte
 		event.preventDefault();
-        if (!canvas.classList.contains('background')) {
-			// Uniquement pendant le jeu, passer l'événement à handleKeyUp
-            handleKeyDown(event);
-        }
-    });
-    
-    document.addEventListener('keyup', event => {
+		if (!canvas.classList.contains('background')) {
+			handleKeyDown(event);
+		}
+	});
+
+	document.addEventListener('keyup', event => {
+		const activeElement = document.activeElement;
+		if (activeElement && activeElement.tagName === 'INPUT') return; // Ignore si dans une zone de texte
 		event.preventDefault();
-        if (!canvas.classList.contains('background')) {
-            // Uniquement pendant le jeu, passer l'événement à handleKeyUp
-            handleKeyUp(event);
-        }
-    });
-    
-    preventZoom();
+		if (!canvas.classList.contains('background')) {
+			handleKeyUp(event);
+		}
+	});
+
+	preventZoom();
 }
 
 setDebugCameraMode(DEBUG);
@@ -131,25 +133,20 @@ function startGame() {
 	const startScreen = document.querySelector('#start-screen');
 	const canvas = document.querySelector('.gameCanvas');
 	const score = document.querySelector('.score');
+	const pseudoInput = document.querySelector('#player-pseudo');
+	const pseudo = pseudoInput.value.trim() || 'Joueur';
+
 	startScreen.classList.add('hidden');
 	canvas.classList.remove('background');
 	score.classList.remove('hidden');
-	socket.emit('joinGame');
+	socket.emit('joinGame', { pseudo }); // Envoi du pseudo au serveur
 }
 
 // Gestion du bouton pour démarrer le jeu
 function setupStartButton() {
 	document.querySelector('#start-game').addEventListener('click', event => {
 		event.preventDefault();
-		const startScreen = document.querySelector('.start-screen');
-		const canvas = document.querySelector('.gameCanvas');
-		const score = document.querySelector('.score');
-
-		startScreen.classList.add('hidden');
-		canvas.classList.remove('background');
-		score.classList.remove('hidden');
-
-		socket.emit('joinGame');
+		startGame();
 	});
 
 	// autres boutons

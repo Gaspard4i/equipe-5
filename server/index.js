@@ -36,7 +36,7 @@ const inputQueue = {};
 const grid = new Grid(CHUNK_SIZE, MAX_WIDTH, MAX_HEIGHT);
 
 /////////////////// INITIALISATION ///////////////////
-export const initializePlayer = socketId => {
+export const initializePlayer = (socketId, pseudo = 'Joueur') => {
 	if (Object.keys(players).length >= MAX_PLAYERS) {
 		io.to(socketId).emit('gameFull'); // Notifie le client que le jeu est plein
 		console.log(
@@ -51,9 +51,11 @@ export const initializePlayer = socketId => {
 		DEFAULT_PLAYER.y,
 		DEFAULT_PLAYER.velocityX,
 		DEFAULT_PLAYER.velocityY,
-		DEFAULT_PLAYER.isAccelerating
+		pseudo // Utilisation du pseudo fourni
 	);
-	console.log(`Nouveau joueur ${socketId} initialisé.`);
+	console.log(
+		`Nouveau joueur ${socketId} initialisé avec le pseudo "${pseudo}".`
+	);
 };
 
 export const createBots = count => {
@@ -140,7 +142,7 @@ const handlePlayerAction = (socketId, action, ...args) => {
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
 
-	socket.on('joinGame', () => initializePlayer(socket.id));
+	socket.on('joinGame', ({ pseudo }) => initializePlayer(socket.id, pseudo));
 
 	socket.on('input', bitmask =>
 		handlePlayerAction(socket.id, () => handleInput(socket.id, bitmask))

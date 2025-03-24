@@ -18,16 +18,7 @@ import {
 
 ///////////////////CLASSE PLAYER///////////////////
 export class Player extends Entity {
-	constructor(
-		id,
-		radius,
-		x,
-		y,
-		vx,
-		vy,
-		pseudo = undefined,
-		skinid = undefined
-	) {
+	constructor(id, radius, x, y, vx, vy, pseudo = undefined) {
 		super(radius, x, y);
 		this.id = id;
 		this.vx = vx;
@@ -37,7 +28,7 @@ export class Player extends Entity {
 		this.isAccelerating = false;
 		this.isSliding = false;
 		this.score = 0;
-		this.pseudo = pseudo;
+		this.pseudo = pseudo || 'Joueur';
 		this.isInvincible = true;
 		this.baseSpeed = BASE_PLAYER_SPEED;
 		this.justEatSomeone = false;

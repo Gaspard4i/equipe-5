@@ -187,3 +187,22 @@ a {
 .hidden {
     display: none;
 }
+
+.pseudo-input {
+    margin: 1rem 0;
+}
+
+.pseudo-input input {
+    width: 80%;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    border: 2px solid #ecf0f1;
+    border-radius: 10px;
+    text-align: center;
+    outline: none;
+}
+
+.pseudo-input input:focus {
+    border-color: #2ecc71;
+    box-shadow: 0 0 5px rgba(46, 204, 113, 0.8);
+}
