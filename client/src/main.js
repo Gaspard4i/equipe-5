@@ -112,7 +112,7 @@ function setupGlobalEvents() {
 }
 
 setDebugCameraMode(DEBUG);
-setDebugPlayerMode(DEBUG);
+setDebugPlayerMode(false);
 setDebugEntityMode(DEBUG);
 setDebugGridMode(DEBUG);
 
@@ -207,7 +207,7 @@ function setupStartButton() {
 	document.getElementById('back-to-home').addEventListener('click', () => {
 		const startScreen = document.getElementById('start-screen');
 		const gameOverScreen = document.getElementById('game-over-screen');
-		startScreen.classList.remove('hidden');; // Montre l'écran de démarrage
+		startScreen.classList.remove('hidden'); // Montre l'écran de démarrage
 		gameOverScreen.classList.add('hidden');
 	});
 
