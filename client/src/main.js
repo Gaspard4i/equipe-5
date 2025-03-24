@@ -144,6 +144,23 @@ function setupStartButton() {
 		scoreScreen.classList.remove('hidden');
 	});
 
+	// Nouveaux boutons pour About et Contact
+	document.getElementById('about-button').addEventListener('click', event => {
+		event.preventDefault();
+		const startScreen = document.getElementById('start-screen');
+		const aboutScreen = document.getElementById('about-screen');
+		startScreen.classList.add('hidden');
+		aboutScreen.classList.remove('hidden');
+	});
+
+	document.getElementById('contact-button').addEventListener('click', event => {
+		event.preventDefault();
+		const startScreen = document.getElementById('start-screen');
+		const contactScreen = document.getElementById('contact-screen');
+		startScreen.classList.add('hidden');
+		contactScreen.classList.remove('hidden');
+	});
+
 	// Back buttons
 	document.getElementById('credits-back').addEventListener('click', () => {
 		const startScreen = document.getElementById('start-screen');
@@ -157,6 +174,21 @@ function setupStartButton() {
 		const scoreScreen = document.getElementById('score-screen');
 		startScreen.style.display = ''; // Montre l'écran de démarrage
 		scoreScreen.classList.add('hidden');
+	});
+
+	// Nouveaux boutons de retour
+	document.getElementById('about-back').addEventListener('click', () => {
+		const startScreen = document.getElementById('start-screen');
+		const aboutScreen = document.getElementById('about-screen');
+		startScreen.style.display = ''; // Montre l'écran de démarrage
+		aboutScreen.classList.add('hidden');
+	});
+
+	document.getElementById('contact-back').addEventListener('click', () => {
+		const startScreen = document.getElementById('start-screen');
+		const contactScreen = document.getElementById('contact-screen');
+		startScreen.style.display = ''; // Montre l'écran de démarrage
+		contactScreen.classList.add('hidden');
 	});
 }
 
