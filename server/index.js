@@ -14,7 +14,6 @@ import {
 	DEFAULT_PLAYER,
 	MAX_PLAYERS,
 } from './config.js';
-
 /////////////////// SERVEUR HTTP ///////////////////
 const httpServer = http.createServer((req, res) => {
 	res.writeHead(302, { Location: 'http://localhost:8000' });
@@ -31,7 +30,6 @@ const io = new IOServer(httpServer, { cors: true });
 
 /////////////////// VARIABLES GLOBALES ///////////////////
 export const players = {};
-export const leaderboard = {};
 export const stains = new Stains(NUM_STAINS);
 const inputQueue = {};
 const grid = new Grid(CHUNK_SIZE, MAX_WIDTH, MAX_HEIGHT);

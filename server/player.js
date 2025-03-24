@@ -15,7 +15,8 @@ import {
 	BONUS_SIZE_MULTIPLIER,
 	BONUS_SIZE_MULTIPLIER_NERFED,
 } from './config.js';
-import { leaderboard } from './index.js';
+
+export const leaderboard = {};
 
 ///////////////////CLASSE PLAYER///////////////////
 export class Player extends Entity {
