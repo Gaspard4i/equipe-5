@@ -5,7 +5,9 @@ import { BonusType } from '../bonus.js';
 import {
 	BASE_PLAYER_SPEED,
 	BONUS_SIZE_MULTIPLIER,
+	BONUS_SIZE_MULTIPLIER_NERFED,
 	BONUS_SPEED_MULTIPLIER,
+	STAIN_SCORE,
 } from '../config.js';
 
 describe('Player Module', () => {
@@ -34,12 +36,27 @@ describe('Player Module', () => {
 				(BASE_PLAYER_SPEED / player.radius) * 40 * BONUS_SPEED_MULTIPLIER
 			);
 		});
+		describe('size bonus', () => {
+			it('should grow correctly after getting size bonus with small radius', () => {
+				const player = new Player('test', 10, 0, 0, 0, 0, false);
+				assert.equal(player.radius, 10);
+				player.bonus(BonusType.TAILLE);
+				assert.equal(player.radius, 10 * BONUS_SIZE_MULTIPLIER);
+			});
 
-		it('should grow and then shrink after getting size bonus', done => {
-			const player = new Player('test', 10, 0, 0, 0, 0, false);
-			assert.equal(player.radius, 10);
-			player.bonus(BonusType.TAILLE);
-			assert.equal(player.radius, 10 * BONUS_SIZE_MULTIPLIER);
+			it('should grow correctly after getting size bonus with medium radius', () => {
+				const player = new Player('test', 200, 0, 0, 0, 0, false);
+				assert.equal(player.radius, 200);
+				player.bonus(BonusType.TAILLE);
+				assert.equal(player.radius, 200 * BONUS_SIZE_MULTIPLIER_NERFED);
+			});
+
+			it('should grow correctly after getting size bonus with large radius', () => {
+				const player = new Player('test', 400, 0, 0, 0, 0, false);
+				assert.equal(player.radius, 400);
+				player.bonus(BonusType.TAILLE);
+				assert.equal(player.radius, 400 + Math.sqrt(STAIN_SCORE / 100));
+			});
 		});
 	});
 
