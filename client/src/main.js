@@ -117,7 +117,7 @@ setDebugEntityMode(DEBUG);
 setDebugGridMode(DEBUG);
 
 function startGame() {
-	const startScreen = document.getElementById('start-screen');
+	const startScreen = document.querySelector('#start-screen');
 	const canvas = document.querySelector('.gameCanvas');
 	const score = document.querySelector('.score');
 	startScreen.classList.add('hidden');
@@ -128,7 +128,8 @@ function startGame() {
 
 // Gestion du bouton pour démarrer le jeu
 function setupStartButton() {
-	document.querySelector('#start-game').addEventListener('click', () => {
+	document.querySelector('#start-game').addEventListener('click', event => {
+		event.preventDefault();
 		const startScreen = document.querySelector('.start-screen');
 		const canvas = document.querySelector('.gameCanvas');
 		const score = document.querySelector('.score');
