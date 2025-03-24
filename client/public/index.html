@@ -6,13 +6,227 @@
     <title>MA.IO</title>
     <link rel="icon" href="./images/favicon.ico" />
     <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/home.css" />
     <script src="build/main.bundle.js" defer></script>
 </head>
 <body>
     <div id="start-screen">
-        <img src="./images/maio.png" alt="logo_maio" width="250px"  height="200px"/>
-        <button id="start-game">Play</button>
+        <!-- User Profile & Progress Bar -->
+        <header id="home-header">
+            <div class="profile">
+                <img src="images/UI/user.png" alt="Profil">
+            </div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </header>
+
+        <!-- Main Game Menu -->
+        <main id="home-main">
+            <!-- Leaderboard -->
+            <section class="leaderboard">
+                <h2><a id="score-button" href="">CLASSEMENT</a></h2>
+                <ul>
+                    <li><span>Pseudo</span> <span>10000 PTS</span></li>
+                    <li><span>Pseudo</span> <span>10000 PTS</span></li>
+                    <li><span>Pseudo</span> <span>10000 PTS</span></li>
+                    <li><span>Pseudo</span> <span>10000 PTS</span></li>
+                    <li><span>Pseudo</span> <span>10000 PTS</span></li>
+                </ul>
+            </section>
+
+            <!-- Play Button & Game Title -->
+            <section class="main-menu">
+                <div class="title">
+                    <img src="./images/maio.png" alt="Logo MA.IO">
+                </div>
+                <div class="play-text" id="play-button">
+                    <a href="#" id="start-game">Jouer</a>
+                </div>
+                <!-- message on game lost -->
+                <div class="lost-message hidden" id="lost-message">PERDU!!</div>
+                <div class="menu-options">
+                    <img src="images/UI/setting.png" alt="Réglages">
+                    <img src="images/UI/group_on.png" alt="Multijoueur">
+                </div>
+            </section>
+
+            <!-- Customization Section -->
+            <section class="customization">
+                <img src="images/UI/left_arrow.png" class="left-arrow" alt="Gauche">
+                <img src="images/skins/ketchup.png" alt="Ketchup">
+                <img src="images/skins/mayonnaise.png" alt="Mayonnaise">
+                <img src="images/skins/bbq-sauce.png" alt="BBQ Sauce">
+                <img src="images/UI/right_arrow.png" class="right-arrow" alt="Droite">
+            </section>
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <footer id="home-footer">
+            <nav>
+                <a id="credits-button" href="">Crédits</a>
+                <a id="about-button" href="">À propos</a>
+                <a id="contact-button" href="">Contact</a>
+            </nav>
+        </footer>
     </div>
+    <!-- credit screen -->
+    <div class="hidden credits-screen" id="credits-screen">
+        <h1 class="screen-title">Crédits</h1>
+        <table>
+            <tr>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Groupe</th>
+                <th>Pseudo</th>
+                <th>Jeu préféré</th>
+                <th>Taux de participation</th>
+            </tr>
+            <tr class="Florian">
+                <td>Florian</td>
+                <td>GAMBIRASIO</td>
+                <td>G</td>
+                <td>HydroFlo</td>
+                <td>Persona 5 Royal</td>
+                <td>100*ln(e(1)) %</td>
+            </tr>
+            <tr class="Gaspard">
+                <td>Gaspard</td>
+                <td>CATRY</td>
+                <td>G</td>
+                <td></td>
+                <td>Minecraft</td>
+                <td>100000/1000 %</td>
+            </tr>
+            <tr class="Gabriel">
+                <td>Gabriel</td>
+                <td>MILLE</td>
+                <td>G</td>
+                <td>SENSA</td>
+                <td>Rocket League</td>
+                <td>100*(sin(pi/2)) %</td>
+            </tr>
+        </table>
+        <button class="back-button" id="credits-back">Retour</button>
+    </div>
+    <!-- score screen -->
+    <div class="hidden score-screen" id="score-screen">
+        <h1 class="screen-title">Meilleurs Scores</h1>
+        <table>
+            <tr>
+                <th>Pseudo</th>
+                <th>Score</th>
+                <th>Date</tr>
+            </tr>
+            <tr class="first">
+                <td>HydroFlo</td>
+                <td>10e50</td>
+                <td>21/03/2025</td>
+            </tr>
+            <tr class="second">
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+            </tr>
+            <tr class="third">
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+            </tr>
+            <tr class="fourth">
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+            </tr>
+            <tr class="fifth">
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+            </tr>
+        </table>
+        <button class="back-button" id="score-back">Retour</button>
+    </div>
+
+    <!-- about screen -->
+    <div class="hidden about-screen" id="about-screen">
+        <h1 class="screen-title">À propos</h1>
+        <div class="about-content">
+            <div class="about-section">
+                <h2>Qu'est-ce que MA.IO?</h2>
+                <p>MA.IO est un jeu multijoueur en ligne où vous incarnez un alien qui, après avoir goûté à la mayonnaise, en est devenu complètement accro. Votre mission : dévorer toutes les taches de mayo dans l'arène tout en affrontant d'autres joueurs pour devenir le maître de la sauce !</p>
+            </div>
+            
+            <div class="about-section">
+                <h2>Comment jouer</h2>
+                <ul>
+                    <li>Utilisez les <strong>flèches directionnelles</strong> ou la <strong>souris</strong> pour vous déplacer</li>
+                    <li>Appuyez sur <strong>Shift</strong> pour accélérer mais perdre de la masse</li>
+                    <li>Mangez les petites taches pour grandir</li>
+                    <li>Mangez les joueurs plus petits que vous</li>
+                    <li>Évitez les joueurs plus grands !</li>
+                </ul>
+            </div>
+            
+            <div class="about-section">
+                <h2>Types de bonus</h2>
+                <ul>
+                    <li><span class="bonus-vitesse">Sauce épicée</span> - Augmente temporairement votre vitesse</li>
+                    <li><span class="bonus-taille">Sauce barbecue</span> - Augmente votre taille</li>
+                </ul>
+            </div>
+            
+            <div class="about-section">
+                <h2>Développé dans le cadre de la SAE4 JSAE</h2>
+                <p>Université de Lille - 2024</p>
+            </div>
+        </div>
+        <button class="back-button" id="about-back">Retour</button>
+    </div>
+    
+    <!-- contact screen -->
+    <div class="hidden contact-screen" id="contact-screen">
+        <h1 class="screen-title">Contact</h1>
+        <div class="contact-content">
+            <div class="contact-section">
+                <h2>Équipe de développement</h2>
+                <table>
+                    <tr>
+                        <th>Nom</th>
+                        <th>GitLab</th>
+                        <th>Email</th>
+                    </tr>
+                    <tr class="Florian">
+                        <td>Florian GAMBIRASIO</td>
+                        <td><a href="https://gitlab.univ-lille.fr/florian.gambirasio.etu" target="_blank">@florian.gambirasio.etu</a></td>
+                        <td>florian.gambirasio.etu@univ-lille.fr</td>
+                    </tr>
+                    <tr class="Gaspard">
+                        <td>Gaspard CATRY</td>
+                        <td><a href="https://gitlab.univ-lille.fr/gaspard.catry.etu" target="_blank">@gaspard.catry.etu</a></td>
+                        <td>gaspard.catry.etu@univ-lille.fr</td>
+                    </tr>
+                    <tr class="Gabriel">
+                        <td>Gabriel MILLE</td>
+                        <td><a href="https://gitlab.univ-lille.fr/gabriel.mille.etu" target="_blank">@gabriel.mille.etu</a></td>
+                        <td>gabriel.mille.etu@univ-lille.fr</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="contact-section">
+                <h2>Contribuer au projet</h2>
+                <p>Le code source du projet est disponible sur GitLab :</p>
+                <p><a href="https://gitlab.univ-lille.fr/jsae/equipe-5" target="_blank">https://gitlab.univ-lille.fr/jsae/equipe-5</a></p>
+            </div>
+            
+            <div class="contact-section">
+                <h2>Signaler un bug</h2>
+                <p>Si vous rencontrez un problème ou un bug, n'hésitez pas à ouvrir une issue sur notre GitLab.</p>
+            </div>
+        </div>
+        <button class="back-button" id="contact-back">Retour</button>
+    </div>
+
     <canvas class="gameCanvas background" width="600" height="400"></canvas>
     <div class="score hidden"><h2></h2></div>
 </body>
