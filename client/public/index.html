@@ -25,7 +25,7 @@
         <main id="home-main">
             <!-- Leaderboard -->
             <section class="leaderboard">
-                <h2><a href="score.html">LEADERBOARD</a></h2>
+                <h2><a id="score-button" href="">CLASSEMENT</a></h2>
                 <ul>
                     <li><span>Pseudo</span> <span>10000 PTS</span></li>
                     <li><span>Pseudo</span> <span>10000 PTS</span></li>
@@ -41,8 +41,10 @@
                     <img src="./images/maio.png" alt="Logo MA.IO">
                 </div>
                 <div class="play-text" id="play-button">
-                    <a href="#" id="start-game">Play</a>
+                    <a href="#" id="start-game">Jouer</a>
                 </div>
+                <!-- message on game lost -->
+                <div class="lost-message hidden" id="lost-message">PERDU!!</div>
                 <div class="menu-options">
                     <img src="images/UI/setting.png" alt="Réglages">
                     <img src="images/UI/group_on.png" alt="Multijoueur">
@@ -62,12 +64,85 @@
         <!-- Bottom Navigation Bar -->
         <footer id="home-footer">
             <nav>
-                <a href="credit.html">Crédits</a>
+                <a id="credits-button" href="">Crédits</a>
                 <a href="#">À propos</a>
                 <a href="#">Contact</a>
             </nav>
         </footer>
     </div>
+    <!-- credit screen -->
+    <div class="hidden" id="credits-screen">
+        <table>
+            <tr>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Groupe</th>
+                <th>Pseudo</th>
+                <th>Jeu préféré</th>
+                <th>Taux de participation</th>
+            </tr>
+            <tr class="Florian">
+                <td>Florian</td>
+                <td>GAMBIRASIO</td>
+                <td>G</td>
+                <td>HydroFlo</td>
+                <td>Persona 5 Royal</td>
+                <td>100*ln(e(1)) %</td>
+            </tr>
+            <tr class="Gaspard">
+                <td>Gaspard</td>
+                <td>CATRY</td>
+                <td>G</td>
+                <td></td>
+                <td>Minecraft</td>
+                <td>100000/1000 %</td>
+            </tr>
+            <tr class="Gabriel">
+                <td>Gabriel</td>
+                <td>MILLE</td>
+                <td>G</td>
+                <td>SENSA</td>
+                <td>Rocket League</td>
+                <td>100*(sin(pi/2)) %</td>
+            </tr>
+        </table>
+    </div>
+    <!-- score screen -->
+    <div class="hidden" id="score-screen">
+        <table>
+            <tr>
+                <th>Pseudo</th>
+                <th>Score</th>
+                <th>Date</tr>
+            </tr>
+            <tr class="first">
+                <td>HydroFlo</td>
+                <td>10e50</td>
+                <td>21/03/2025</td>
+            </tr>
+            <tr class="second">
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+            </tr>
+            <tr class="third">
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+            </tr>
+            <tr class="fourth">
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+            </tr>
+            <tr class="fifth">
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+                <td>Placeholder</td>
+            </tr>
+        </table>
+    </div>
+
     <canvas class="gameCanvas background" width="600" height="400"></canvas>
     <div class="score hidden"><h2></h2></div>
 </body>
