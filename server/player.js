@@ -164,13 +164,17 @@ export class Player extends Entity {
 				this.baseSpeed = BASE_PLAYER_SPEED;
 			}, BONUS_TIME);
 		} else if (bt === BonusType.TAILLE) {
-			if (this.radius < 100) this.radius *= BONUS_SIZE_MULTIPLIER;
-			this.justGotBigger = true;
-			setTimeout(() => {
-				this.justGotBigger = false;
-			}, 2000);
-			else if (this.radius < 300) this.radius *= BONUS_SIZE_MULTIPLIER_NERFED;
-			else this.grow();
+			if (this.radius < 100) {
+				this.radius *= BONUS_SIZE_MULTIPLIER;
+				this.justGotBigger = true;
+				setTimeout(() => {
+					this.justGotBigger = false;
+				}, 2000);
+			} else if (this.radius < 300) {
+				this.radius *= BONUS_SIZE_MULTIPLIER_NERFED;
+			} else {
+				this.grow();
+			}
 		}
 	}
 

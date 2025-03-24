@@ -325,7 +325,7 @@ export function drawPlayer(context, player) {
 	}
 
 	if (player.justEatSomeone) {
-		// ... code pour le halo quand on mange quelqu'un ...
+		//TODO
 	}
 }
 
