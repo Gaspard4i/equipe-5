@@ -96,7 +96,7 @@ export class Player extends Entity {
 	}
 
 	absorb(otherPlayer) {
-		this.radius += otherPlayer.radius /*/ 2*/;
+		this.radius += otherPlayer.radius * 0.5;
 		this.score += otherPlayer.score + PLAYER_EAT_BONUS;
 		this.updateSpeed();
 	}
