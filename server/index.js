@@ -31,6 +31,7 @@ const io = new IOServer(httpServer, { cors: true });
 
 /////////////////// VARIABLES GLOBALES ///////////////////
 export const players = {};
+export const leaderboard = {};
 export const stains = new Stains(NUM_STAINS);
 const inputQueue = {};
 const grid = new Grid(CHUNK_SIZE, MAX_WIDTH, MAX_HEIGHT);

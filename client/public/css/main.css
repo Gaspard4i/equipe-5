@@ -155,6 +155,70 @@ canvas.background {
     background-color: rgba(211, 84, 0, 0.3);
 }
 
+/* Score screen specific styling */
+.score-screen {
+    /* ...existing code... */
+    overflow-y: auto;
+}
+
+#score-screen table {
+    width: 80%;
+    max-width: 900px;
+    max-height: 70vh;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    background-color: rgba(45, 52, 75, 0.8);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+#score-screen table tbody {
+    display: block;
+    max-height: 50vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #3498db rgba(45, 52, 75, 0.5);
+}
+
+#score-screen table thead, 
+#score-screen table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#score-screen table thead {
+    background-color: #2c3e50;
+    width: calc(100% - 0.7em); /* Ajustement pour la barre de défilement */
+}
+
+#score-screen th {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* Styling des scrollbars */
+#score-screen table tbody::-webkit-scrollbar {
+    width: 0.7em;
+}
+
+#score-screen table tbody::-webkit-scrollbar-track {
+    background: rgba(45, 52, 75, 0.5);
+    border-radius: 10px;
+}
+
+#score-screen table tbody::-webkit-scrollbar-thumb {
+    background-color: #3498db;
+    border-radius: 10px;
+}
+
 /* About screen specific styling */
 .about-content, .contact-content {
     width: 80%;

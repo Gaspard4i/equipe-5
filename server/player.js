@@ -15,6 +15,7 @@ import {
 	BONUS_SIZE_MULTIPLIER,
 	BONUS_SIZE_MULTIPLIER_NERFED,
 } from './config.js';
+import { leaderboard } from './index.js';
 
 ///////////////////CLASSE PLAYER///////////////////
 export class Player extends Entity {
@@ -100,6 +101,29 @@ export class Player extends Entity {
 		}, 2000);
 	}
 
+	checkNewPB() {
+		let existingRecord = null;
+		for (const pseudo in leaderboard) {
+			if (pseudo === this.pseudo) {
+				existingRecord = leaderboard[pseudo];
+				break;
+			}
+		}
+
+		if (!existingRecord || this.score > existingRecord.score) {
+			leaderboard[this.pseudo] = {
+				pseudo: this.pseudo,
+				score: this.score,
+				date: new Date().toISOString().split('T')[0], // Format YYYY-MM-DD
+			};
+			console.log(
+				`${this.pseudo} a été ajouté au leaderboard avec un score de ${this.score}`
+			);
+			return true; // Indique qu'il y a eu une mise à jour
+		}
+		return false; // Pas de mise à jour
+	}
+
 	checkPlayerCollision(grid, players, io) {
 		const nearbyPlayers = grid.getNearbyEntities(this);
 		for (const otherPlayer of nearbyPlayers) {
@@ -117,11 +141,20 @@ export class Player extends Entity {
 
 				// looser go back to moodle
 				if (!otherPlayer.isBot) {
-					// removePlayer(this.id);
-					io.to(otherPlayer.id).emit('lost'); // Envoie un message de perte
-				}
+					// Vérifier si le joueur a battu son record
+					if (otherPlayer.checkNewPB()) {
+						// Envoyer le leaderboard mis à jour à tous les clients
+						io.emit('updateLeaderboard', leaderboard);
+					}
 
-				delete players[otherPlayer.id];
+					// Marquer le joueur comme mangé pour le supprimer au prochain tick
+					otherPlayer.isEaten = true;
+
+					io.to(otherPlayer.id).emit('lost'); // Envoie un message de perte
+				} else {
+					// Supprimer directement les bots
+					delete players[otherPlayer.id];
+				}
 			}
 		}
 	}
