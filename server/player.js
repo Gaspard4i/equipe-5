@@ -16,9 +16,20 @@ import {
 	BONUS_SIZE_MULTIPLIER_NERFED,
 } from './config.js';
 
+export const leaderboard = {};
+
 ///////////////////CLASSE PLAYER///////////////////
 export class Player extends Entity {
-	constructor(id, radius, x, y, vx, vy, pseudo = undefined) {
+	constructor(
+		id,
+		radius,
+		x,
+		y,
+		vx,
+		vy,
+		pseudo = undefined,
+		startTime = Date.now()
+	) {
 		super(radius, x, y);
 		this.id = id;
 		this.vx = vx;
@@ -34,6 +45,8 @@ export class Player extends Entity {
 		this.justEatSomeone = false;
 		this.justGotBigger = false;
 		this.isBoosted = false;
+		this.startTime = startTime;
+		this.endTime = Date.now();
 		setTimeout(() => {
 			this.isInvincible = false;
 		}, BONUS_TIME);
@@ -100,6 +113,29 @@ export class Player extends Entity {
 		}, 2000);
 	}
 
+	checkNewPB() {
+		let existingRecord = null;
+		for (const pseudo in leaderboard) {
+			if (pseudo === this.pseudo) {
+				existingRecord = leaderboard[pseudo];
+				break;
+			}
+		}
+
+		if (!existingRecord || this.score > existingRecord.score) {
+			leaderboard[this.pseudo] = {
+				pseudo: this.pseudo,
+				score: this.score,
+				date: new Date().toISOString().split('T')[0], // Format YYYY-MM-DD
+			};
+			console.log(
+				`${this.pseudo} a été ajouté au leaderboard avec un score de ${this.score}`
+			);
+			return true; // Indique qu'il y a eu une mise à jour
+		}
+		return false; // Pas de mise à jour
+	}
+
 	checkPlayerCollision(grid, players, io) {
 		const nearbyPlayers = grid.getNearbyEntities(this);
 		for (const otherPlayer of nearbyPlayers) {
@@ -117,11 +153,20 @@ export class Player extends Entity {
 
 				// looser go back to moodle
 				if (!otherPlayer.isBot) {
-					// removePlayer(this.id);
-					io.to(otherPlayer.id).emit('lost'); // Envoie un message de perte
-				}
+					const killedPlayer = players[otherPlayer.id]; // Joueur qui se fait tuer (généralement soit même)
+					killedPlayer.endTime = Date.now(); // On met le temps où le joueur est mort pour calculer combien de temps il a vécu
+					const aliveTime = Math.floor(
+						(killedPlayer.endTime - killedPlayer.startTime) / 1000 //calcul du temps de vie en secondes
+					);
 
-				delete players[otherPlayer.id];
+					killedPlayer.score *= 1 + aliveTime / 1000; // 1 millième du temps de vie augmente le score
+					// Vérifier si le joueur a battu son record
+					if (otherPlayer.checkNewPB()) {
+						// Envoyer le leaderboard mis à jour à tous les clients
+						io.emit('updateLeaderboard', leaderboard);
+					}
+					io.to(otherPlayer.id).emit('lost', killedPlayer.score); // Envoie un message de perte
+				}
 			}
 		}
 	}

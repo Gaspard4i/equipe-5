@@ -90,6 +90,35 @@ main {
     color: #ecf0f1;
 }
 
+.leaderboard h2 {
+    margin-bottom: 0.8rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    font-size: 1.8rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.leaderboard h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    width: 50%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #f1c40f, transparent);
+    border-radius: 3px;
+}
+
+.leaderboard h2 a {
+    transition: all 0.3s ease;
+}
+
+.leaderboard h2 a:hover {
+    color: #f1c40f;
+    text-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+    transform: scale(1.05);
+}
+
 .leaderboard ul {
     list-style: none;
     text-align: left;
@@ -101,6 +130,116 @@ main {
     justify-content: space-between;
     font-size: 1.3rem;
     color: #ecf0f1;
+}
+
+/* Leaderboard styling for home screen */
+.leaderboard #mini-score-screen {
+    background: none;
+    padding: 0;
+    height: auto;
+    position: static;
+    display: block;
+    overflow: visible;
+}
+
+.leaderboard #mini-score-screen table {
+    width: 100%;
+    background: none;
+    box-shadow: none;
+    margin: 0;
+    max-height: none;
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+}
+
+.leaderboard #mini-score-screen th {
+    display: none; /* Masquer les en-têtes pour un design plus compact */
+}
+
+.leaderboard #mini-score-screen td {
+    padding: 0.8rem 0.5rem;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #ecf0f1;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.leaderboard #mini-score-screen tr {
+    background: rgba(52, 73, 94, 0.3);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.leaderboard #mini-score-screen tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.leaderboard #mini-score-screen tr.first {
+    background: rgba(241, 196, 15, 0.25);
+}
+
+.leaderboard #mini-score-screen tr.first::before {
+    content: "👑";
+    position: absolute;
+    left: -1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    animation: float 2s ease-in-out infinite;
+}
+
+.leaderboard #mini-score-screen tr.second {
+    background: rgba(189, 195, 199, 0.25);
+}
+
+.leaderboard #mini-score-screen tr.third {
+    background: rgba(211, 84, 0, 0.25);
+}
+
+.leaderboard #mini-score-screen td:first-child {
+    border-radius: 8px 0 0 8px;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 1rem;
+}
+
+.leaderboard #mini-score-screen td:last-child {
+    border-radius: 0 8px 8px 0;
+    font-family: 'Chewy', cursive;
+    font-weight: bold;
+    text-align: right;
+    padding-right: 1rem;
+}
+
+.leaderboard #mini-score-screen tr.first td:last-child {
+    color: #f1c40f;
+}
+
+.leaderboard #mini-score-screen tr.second td:last-child {
+    color: #bdc3c7;
+}
+
+.leaderboard #mini-score-screen tr.third td:last-child {
+    color: #d35400;
+}
+
+@keyframes float {
+    0% { transform: translateY(-50%) translateX(0); }
+    50% { transform: translateY(-50%) translateX(3px) rotate(5deg); }
+    100% { transform: translateY(-50%) translateX(0); }
+}
+
+/* Icône de trophée pour les positions */
+.position-icon {
+    display: inline-block;
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-right: 0.5rem;
+    vertical-align: middle;
 }
 
 /* ===== MAIN MENU ===== */

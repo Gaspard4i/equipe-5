@@ -24,13 +24,13 @@
             <!-- Leaderboard -->
             <section class="leaderboard">
                 <h2><a id="score-button" href="">CLASSEMENT</a></h2>
-                <ul>
-                    <li><span>Pseudo</span> <span>10000 PTS</span></li>
-                    <li><span>Pseudo</span> <span>10000 PTS</span></li>
-                    <li><span>Pseudo</span> <span>10000 PTS</span></li>
-                    <li><span>Pseudo</span> <span>10000 PTS</span></li>
-                    <li><span>Pseudo</span> <span>10000 PTS</span></li>
-                </ul>
+                <div id="mini-score-screen">
+                    <table>
+                        <tbody>
+                            <!-- Le contenu sera ajouté dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
             </section>
 
             <!-- Play Button & Game Title -->
@@ -123,36 +123,15 @@
     <div class="hidden score-screen" id="score-screen">
         <h1 class="screen-title">Meilleurs Scores</h1>
         <table>
-            <tr>
-                <th>Pseudo</th>
-                <th>Score</th>
-                <th>Date</tr>
-            </tr>
-            <tr class="first">
-                <td>HydroFlo</td>
-                <td>10e50</td>
-                <td>21/03/2025</td>
-            </tr>
-            <tr class="second">
-                <td>Placeholder</td>
-                <td>Placeholder</td>
-                <td>Placeholder</td>
-            </tr>
-            <tr class="third">
-                <td>Placeholder</td>
-                <td>Placeholder</td>
-                <td>Placeholder</td>
-            </tr>
-            <tr class="fourth">
-                <td>Placeholder</td>
-                <td>Placeholder</td>
-                <td>Placeholder</td>
-            </tr>
-            <tr class="fifth">
-                <td>Placeholder</td>
-                <td>Placeholder</td>
-                <td>Placeholder</td>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Pseudo</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
         </table>
         <button class="back-button" id="score-back">Retour</button>
     </div>

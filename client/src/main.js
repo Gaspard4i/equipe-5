@@ -33,11 +33,7 @@ function setupSocketEvents() {
 	socket.on('updatePlayers', players => updatePlayers(players));
 	socket.on('updateStains', serverStains => updateStains(serverStains));
 	socket.on('playerDisconnected', id => delete otherPlayers[id]);
-	socket.on('redirect', url => (window.location.href = url));
-	socket.on('reload', () => {
-		console.log('Serveur a détecté un problème, rechargement de la page...');
-		window.location.reload();
-	});
+	socket.on('updateLeaderboard', newPB => updateLeaderboard(newPB));
 }
 
 // Met à jour les joueurs
@@ -71,12 +67,99 @@ function updateStains(serverStains) {
 	}
 }
 
+function updateLeaderboard(newLeaderboard) {
+	// Convertir l'objet leaderboard en tableau
+	const scores = Object.values(newLeaderboard);
+
+	// Trier par score décroissant
+	scores.sort((a, b) => b.score - a.score);
+
+	// Mettre à jour le tableau principal des scores
+	updateMainLeaderboard(scores);
+
+	// Mettre à jour le mini leaderboard
+	updateMiniLeaderboard(scores);
+}
+
+function updateMainLeaderboard(scores) {
+	const leaderboardTable = document.querySelector('#score-screen table tbody');
+	if (!leaderboardTable) return;
+
+	// Vider le tableau
+	leaderboardTable.innerHTML = '';
+
+	// Ajouter tous les scores au tableau complet
+	for (let i = 0; i < scores.length; i++) {
+		const entry = scores[i];
+		const row = document.createElement('tr');
+
+		// Ajouter des classes pour les 3 premiers
+		if (i === 0) row.classList.add('first');
+		else if (i === 1) row.classList.add('second');
+		else if (i === 2) row.classList.add('third');
+
+		// Créer les cellules avec les données
+		row.innerHTML = `
+            <td>${entry.pseudo}</td>
+            <td>${entry.score.toLocaleString()}</td>
+            <td>${entry.date}</td>
+        `;
+
+		leaderboardTable.appendChild(row);
+	}
+}
+
+function updateMiniLeaderboard(scores) {
+	const miniLeaderboardTable = document.querySelector(
+		'#mini-score-screen table tbody'
+	);
+	if (!miniLeaderboardTable) return;
+
+	// Vider le tableau
+	miniLeaderboardTable.innerHTML = '';
+
+	// Ne prendre que les 3 meilleurs scores pour le mini-leaderboard
+	const maxEntries = Math.min(scores.length, 3);
+
+	// Si aucun score n'est disponible, afficher un message
+	if (maxEntries === 0) {
+		const row = document.createElement('tr');
+		row.innerHTML = `
+			<td colspan="2">Pas encore de scores</td>
+		`;
+		miniLeaderboardTable.appendChild(row);
+		return;
+	}
+
+	for (let i = 0; i < maxEntries; i++) {
+		const entry = scores[i];
+		const row = document.createElement('tr');
+
+		// Ajouter des classes pour les 3 premiers
+		if (i === 0) row.classList.add('first');
+		else if (i === 1) row.classList.add('second');
+		else if (i === 2) row.classList.add('third');
+
+		// Ajouter un emoji selon la position
+		let positionEmoji = '';
+
+		// Créer les cellules avec les données (sans la date)
+		row.innerHTML = `
+			<td>${entry.pseudo}</td>
+			<td>${entry.score.toLocaleString()} pts</td>
+		`;
+
+		miniLeaderboardTable.appendChild(row);
+	}
+}
+
 socket.on('playerDisconnected', id => {
 	delete otherPlayers[id];
 });
 
-socket.on('lost', () => {
+socket.on('lost', score => {
 	const gameOverScreen = document.querySelector('.game-over-screen');
+	updateProgressBar(score || 0);
 	gameOverScreen.classList.remove('hidden');
 	isPlayerDead = true;
 });
@@ -263,7 +346,7 @@ function startGame() {
 	startScreen.classList.add('hidden');
 	canvas.classList.remove('background');
 	score.classList.remove('hidden');
-	socket.emit('joinGame', { pseudo }); // envoie le pseudo au serv
+	socket.emit('joinGame', { pseudo: pseudo, startTime: Date.now() }); // Envoi du pseudo au serveur
 }
 
 // demmare le jeu
