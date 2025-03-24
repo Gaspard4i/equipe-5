@@ -71,13 +71,6 @@ socket.on('playerDisconnected', id => {
 
 socket.on('lost', () => {
 	const gameOverScreen = document.querySelector('.game-over-screen');
-	const startScreen = document.querySelector('.start-screen');
-	const canvas = document.querySelector('.gameCanvas');
-	const score = document.querySelector('.score');
-
-	startScreen.classList.remove('hidden'); // Cache l'écran de démarrage
-	canvas.classList.add('background'); // Retire la classe d'arrière-plan
-	score.classList.add('hidden'); // Affiche la zone de score
 	gameOverScreen.classList.remove('hidden'); // Show the message
 });
 
