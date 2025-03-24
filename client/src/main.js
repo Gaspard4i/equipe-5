@@ -12,20 +12,33 @@ import { io } from 'socket.io-client';
 import { Camera } from './camera.js';
 import { handleKeyDown, handleKeyUp, preventZoom } from './input.js';
 
+const DEBUG = true;
+
 export const socket = io(window.location.hostname + ':8080');
-// let username = prompt('Entrez votre pseudo :');
 
 const stains = [];
 const currentPlayer = {};
 export const camera = new Camera();
 const otherPlayers = {};
 
-// événements socket
-socket.on('connect', () => {
-	console.log(`Connecté au serveur avec l'ID :`, socket.id);
-});
+// Gestion des événements socket
+function setupSocketEvents() {
+	socket.on('connect', () => {
+		console.log(`Connecté au serveur avec l'ID :`, socket.id);
+	});
 
-socket.on('updatePlayers', players => {
+	socket.on('updatePlayers', players => updatePlayers(players));
+	socket.on('updateStains', serverStains => updateStains(serverStains));
+	socket.on('playerDisconnected', id => delete otherPlayers[id]);
+	socket.on('redirect', url => (window.location.href = url));
+	socket.on('reload', () => {
+		console.log('Serveur a détecté un problème, rechargement de la page...');
+		window.location.reload();
+	});
+}
+
+// Met à jour les joueurs
+function updatePlayers(players) {
 	for (const id in otherPlayers) {
 		if (!players[id]) {
 			delete otherPlayers[id];
@@ -38,9 +51,10 @@ socket.on('updatePlayers', players => {
 			otherPlayers[id] = players[id];
 		}
 	}
-});
+}
 
-socket.on('updateStains', serverStains => {
+// Met à jour les taches
+function updateStains(serverStains) {
 	if (serverStains && Array.isArray(serverStains.stains)) {
 		stains.length = 0;
 		stains.push(...serverStains.stains);
@@ -50,7 +64,7 @@ socket.on('updateStains', serverStains => {
 			serverStains
 		);
 	}
-});
+};
 
 socket.on('playerDisconnected', id => {
 	delete otherPlayers[id];
@@ -87,28 +101,31 @@ function render() {
 	requestAnimationFrame(render);
 }
 
-window.addEventListener('keydown', event => handleKeyDown(event));
-window.addEventListener('keyup', event => handleKeyUp(event));
-preventZoom();
+// Initialisation des événements globaux
+function setupGlobalEvents() {
+	window.addEventListener('keydown', event => handleKeyDown(event));
+	window.addEventListener('keyup', event => handleKeyUp(event));
+	preventZoom();
+}
 
-setDebugCameraMode(false);
-setDebugPlayerMode(false);
-setDebugEntityMode(false);
-setDebugGridMode(false);
+setDebugCameraMode(DEBUG);
+setDebugPlayerMode(DEBUG);
+setDebugEntityMode(DEBUG);
+setDebugGridMode(DEBUG);
 
 // Gestion du bouton pour démarrer le jeu
-document.getElementById('start-game').addEventListener('click', () => {
-	const startScreen = document.getElementById('start-screen');
-	const canvas = document.querySelector('.gameCanvas');
-	const score = document.querySelector('.score');
+function setupStartButton() {
+	document.getElementById('start-game').addEventListener('click', () => {
+		const startScreen = document.getElementById('start-screen');
+		const canvas = document.querySelector('.gameCanvas');
+		const score = document.querySelector('.score');
 
-	startScreen.style.display = 'none'; // Cache l'écran de démarrage
-	canvas.classList.remove('background'); // Retire la classe d'arrière-plan
-	score.classList.remove('hidden'); // Affiche la zone de score
+		startScreen.style.display = 'none';
+		canvas.classList.remove('background');
+		score.classList.remove('hidden');
 
-	// Informer le serveur que le joueur rejoint le jeu
-	socket.emit('joinGame');
-});
+		socket.emit('joinGame');
+	});
 
 // autres boutons
 document.getElementById('credits-button').addEventListener('click', event => {
@@ -126,6 +143,14 @@ document.getElementById('score-button').addEventListener('click', event => {
 	startScreen.style.display = 'none'; // Cache l'écran de démarrage
 	scoreScreen.classList.remove('hidden');
 });
+}
 
-// Démarre le rendu du jeu en arrière-plan
-observeCanvas(() => {}, render);
+// Initialisation principale
+function init() {
+	setupSocketEvents();
+	setupGlobalEvents();
+	setupStartButton();
+	observeCanvas(() => {}, render);
+}
+
+init();
