@@ -132,7 +132,7 @@ function startGame() {
 	startScreen.classList.add('hidden');
 	canvas.classList.remove('background');
 	score.classList.remove('hidden');
-	socket.emit('joinGame', { pseudo }); // Envoi du pseudo au serveur
+	socket.emit('joinGame', { pseudo: pseudo, startTime: Date.now() }); // Envoi du pseudo au serveur
 }
 
 // Gestion du bouton pour démarrer le jeu

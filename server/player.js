@@ -18,7 +18,16 @@ import {
 
 ///////////////////CLASSE PLAYER///////////////////
 export class Player extends Entity {
-	constructor(id, radius, x, y, vx, vy, pseudo = undefined) {
+	constructor(
+		id,
+		radius,
+		x,
+		y,
+		vx,
+		vy,
+		pseudo = undefined,
+		startTime = Date.now()
+	) {
 		super(radius, x, y);
 		this.id = id;
 		this.vx = vx;
@@ -34,6 +43,8 @@ export class Player extends Entity {
 		this.justEatSomeone = false;
 		this.justGotBigger = false;
 		this.isBoosted = false;
+		this.startTime = startTime;
+		this.endTime = Date.now();
 		setTimeout(() => {
 			this.isInvincible = false;
 		}, BONUS_TIME);
@@ -117,7 +128,13 @@ export class Player extends Entity {
 
 				// looser go back to moodle
 				if (!otherPlayer.isBot) {
-					// removePlayer(this.id);
+					const killedPlayer = players[otherPlayer.id]; // Joueur qui se fait tuer (généralement soit même)
+					killedPlayer.endTime = Date.now(); // On met le temps où le joueur est mort pour calculer combien de temps il a vécu
+					const aliveTime = Math.floor(
+						(killedPlayer.endTime - killedPlayer.startTime) / 1000 //calcul du temps de vie en secondes
+					);
+
+					killedPlayer.score *= 1 + aliveTime / 1000; // 1 millième du temps de vie augmente le score
 					io.to(otherPlayer.id).emit('lost'); // Envoie un message de perte
 				}
 
@@ -230,7 +247,7 @@ export class Player extends Entity {
 export class BotPlayer extends Player {
 	constructor(radius, x, y, vx, vy) {
 		const id = uuidv4(); // uuid pour les bots
-		super(`bot_${id}`, radius, x, y, vx, vy, false, 'Bot');
+		super(`bot_${id}`, radius, x, y, vx, vy, 'Bot');
 		this.isBot = true;
 	}
 
