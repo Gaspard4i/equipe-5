@@ -5,8 +5,8 @@ export const TICK_RATE = 1000 / 60; // fq des ticks (FPS)
 
 ///////////////////CONFIGURATION DE LA MAP///////////////////
 
-export const MAX_WIDTH = 12000; // Largeur
-export const MAX_HEIGHT = 5000; // Hauteur
+export const MAX_WIDTH = 7000; // Largeur
+export const MAX_HEIGHT = 7000; // Hauteur
 export const CHUNK_SIZE = 200; // taille des chunks
 
 ///////////////////CONFIGURATION DES JOUEURS///////////////////

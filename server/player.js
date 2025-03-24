@@ -18,7 +18,16 @@ import {
 
 ///////////////////CLASSE PLAYER///////////////////
 export class Player extends Entity {
-	constructor(id, radius, x, y, vx, vy, pseudo = undefined) {
+	constructor(
+		id,
+		radius,
+		x,
+		y,
+		vx,
+		vy,
+		pseudo = undefined,
+		skinid = undefined
+	) {
 		super(radius, x, y);
 		this.id = id;
 		this.vx = vx;

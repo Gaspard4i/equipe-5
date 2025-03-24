@@ -1,18 +1,14 @@
-import {
-	canvas,
-	context,
-	observeCanvas,
-	drawGame,
-	setDebugCameraMode,
-	setDebugPlayerMode,
-	setDebugEntityMode,
-	setDebugGridMode,
-} from './canvas.js';
+import { canvas, context, observeCanvas, drawGame } from './canvas.js';
 import { io } from 'socket.io-client';
 import { Camera } from './camera.js';
 import { handleKeyDown, handleKeyUp, preventZoom } from './input.js';
 import { updateProgressBar } from './progressBar.js';
-
+import {
+	setDebugCameraMode,
+	setDebugPlayerMode,
+	setDebugEntityMode,
+	setDebugGridMode,
+} from './debug.js';
 const DEBUG = false;
 
 export const socket = io(window.location.hostname + ':8080');
