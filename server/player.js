@@ -13,6 +13,7 @@ import {
 	STAIN_SCORE,
 	BONUS_SPEED_MULTIPLIER,
 	BONUS_SIZE_MULTIPLIER,
+	BONUS_SIZE_MULTIPLIER_NERFED,
 } from './config.js';
 
 ///////////////////CLASSE PLAYER///////////////////
@@ -156,18 +157,20 @@ export class Player extends Entity {
 
 	bonus(bt) {
 		if (bt === BonusType.VITESSE) {
-			this.baseSpeed *= BONUS_SPEED_MULTIPLIER;
+			this.baseSpeed = BASE_PLAYER_SPEED * BONUS_SPEED_MULTIPLIER;
 			this.isBoosted = true;
 			setTimeout(() => {
 				this.isBoosted = false;
-				this.baseSpeed /= BONUS_SPEED_MULTIPLIER;
+				this.baseSpeed = BASE_PLAYER_SPEED;
 			}, BONUS_TIME);
 		} else if (bt === BonusType.TAILLE) {
-			this.radius *= BONUS_SIZE_MULTIPLIER;
+			if (this.radius < 100) this.radius *= BONUS_SIZE_MULTIPLIER;
 			this.justGotBigger = true;
 			setTimeout(() => {
 				this.justGotBigger = false;
 			}, 2000);
+			else if (this.radius < 300) this.radius *= BONUS_SIZE_MULTIPLIER_NERFED;
+			else this.grow();
 		}
 	}
 
