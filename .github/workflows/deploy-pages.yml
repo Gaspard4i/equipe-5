@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
@@ -26,6 +28,15 @@ jobs:
 
       - name: Build client
         run: npx webpack --mode=production
+
+      - name: Enable GitHub Pages
+        continue-on-error: true
+        run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/pages \
+            -d '{"source":{"branch":"gh-pages","path":"/"}}'
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
