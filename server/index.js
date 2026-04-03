@@ -1,4 +1,6 @@
 import http from 'http';
+import fs from 'fs';
+import path from 'path';
 import { Server as IOServer } from 'socket.io';
 import { Player, BotPlayer } from './player.js';
 import { Stains } from './stains.js';
@@ -14,19 +16,52 @@ import {
 	DEFAULT_PLAYER,
 	MAX_PLAYERS,
 } from './config.js';
-/////////////////// SERVEUR HTTP ///////////////////
+
+/////////////////// SERVEUR HTTP + STATIC ///////////////////
+const MIME_TYPES = {
+	'.html': 'text/html',
+	'.js': 'application/javascript',
+	'.css': 'text/css',
+	'.png': 'image/png',
+	'.jpg': 'image/jpeg',
+	'.svg': 'image/svg+xml',
+	'.ico': 'image/x-icon',
+	'.json': 'application/json',
+};
+
+const clientDir = path.resolve(import.meta.dirname, '../client/public');
+
 const httpServer = http.createServer((req, res) => {
-	res.writeHead(302, { Location: 'http://localhost:8000' });
-	res.end();
+	let filePath = path.join(clientDir, req.url === '/' ? 'index.html' : req.url);
+	const ext = path.extname(filePath);
+	const mimeType = MIME_TYPES[ext] || 'application/octet-stream';
+
+	fs.readFile(filePath, (err, data) => {
+		if (err) {
+			// Fallback to index.html for SPA
+			fs.readFile(path.join(clientDir, 'index.html'), (err2, data2) => {
+				if (err2) {
+					res.writeHead(404);
+					res.end('Not Found');
+					return;
+				}
+				res.writeHead(200, { 'Content-Type': 'text/html' });
+				res.end(data2);
+			});
+			return;
+		}
+		res.writeHead(200, { 'Content-Type': mimeType });
+		res.end(data);
+	});
 });
 
 const port = process.env.PORT || PORT;
-httpServer.listen(port, () =>
-	console.log(`Server running at http://localhost:${port}/`)
+httpServer.listen(port, '0.0.0.0', () =>
+	console.log(`MA.IO server running at http://0.0.0.0:${port}/`)
 );
 
 /////////////////// SOCKET.IO ///////////////////
-const io = new IOServer(httpServer, { cors: true });
+const io = new IOServer(httpServer, { cors: { origin: '*' } });
 
 /////////////////// VARIABLES GLOBALES ///////////////////
 export const players = {};
@@ -37,7 +72,7 @@ const grid = new Grid(CHUNK_SIZE, MAX_WIDTH, MAX_HEIGHT);
 /////////////////// INITIALISATION ///////////////////
 export const initializePlayer = (socketId, pseudo = 'Joueur', startTime) => {
 	if (Object.keys(players).length >= MAX_PLAYERS) {
-		io.to(socketId).emit('gameFull'); // Notifie le client que le jeu est plein
+		io.to(socketId).emit('gameFull');
 		console.log(
 			`Connexion refusée : le jeu est plein (${MAX_PLAYERS} joueurs).`
 		);
@@ -50,7 +85,7 @@ export const initializePlayer = (socketId, pseudo = 'Joueur', startTime) => {
 		DEFAULT_PLAYER.y,
 		DEFAULT_PLAYER.velocityX,
 		DEFAULT_PLAYER.velocityY,
-		pseudo, // Utilisation du pseudo fourni
+		pseudo,
 		startTime
 	);
 	console.log(
@@ -87,12 +122,10 @@ export const removePlayer = socketId => {
 export const processGameTick = () => {
 	grid.clear();
 
-	// ajoute les entités à la grille
 	[...Object.values(players), ...stains.getAll()].forEach(entity =>
 		grid.addEntity(entity)
 	);
 
-	// traite les entrées des joueurs
 	Object.entries(inputQueue).forEach(([id, bitmask]) => {
 		const player = players[id];
 		if (player) {
@@ -107,7 +140,6 @@ export const processGameTick = () => {
 		}
 	});
 
-	// maj les entités
 	Object.values(players).forEach(player => {
 		player.isBot
 			? player.updateBotMovement(grid, stains, players, io)
@@ -116,7 +148,6 @@ export const processGameTick = () => {
 
 	stains.updateStains(players);
 
-	// sync tout
 	io.emit('updatePlayers', players);
 	io.emit('updateStains', stains);
 };
@@ -154,7 +185,6 @@ io.on('connection', socket => {
 
 	socket.on('mousedown', isAccelerating =>
 		handlePlayerAction(socket.id, player => {
-			// active ou désactive l'accel
 			player.isAccelerating = isAccelerating;
 		})
 	);
