@@ -7,7 +7,7 @@ export default {
 	output: {
 		path: path.resolve(import.meta.dirname, './client/public/build'),
 		filename: 'main.bundle.js',
-		publicPath: '/build/',
+		publicPath: 'build/',
 	},
 	// compatibilité anciens navigateurs (si besoin du support de IE11 ou android 4.4)
 	target: ['web', 'es5'],
